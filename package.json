@@ -1,0 +1,15 @@
+{
+  "name": "screen-shit",
+  "version": "0.1.0",
+  "description": "app for stuff",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": "https://github.com/kevando/screen-shit.git",
+  "author": "kevando <khabich@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^3.0.4"
+  }
+}
