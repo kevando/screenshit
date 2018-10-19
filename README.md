@@ -1,42 +1,32 @@
-### Screen Shit
+### ScreenShit
 
 ![demo](app/icon/96x96.png)
 
+Assistance when you need it.
 
-Screen Shit is an open source application for your desktop that aids you after taking a screenshot. 
+## What?
 
-
-
-#### Available features
-
-* Copy screen shot to clipboard
+ScreenShit is a desktop application that runs in the background and monitors for new screen shots. When a new screen shot is detected, ScreenShit prompts you with options for handling the screen shot.
 
 
+## Open Source
+
+I made this app using Electron, so you can run this locally if you want.
 
 
-## Roadmap
-* option to delete screenshot
-* option to archive screenshot 
+### Local Development
 
-
-## Development
-
-I used electron for this
 
 
 ```
 git clone [...]
-rm -rf node_modules
 npm install
 electron-forge start  
-
-
 ```
 
+## References
+
+[Chokidar](https://ourcodeworld.com/articles/read/160/watch-files-and-directories-with-electron-framework) for watching file system.
 
 
-### Chokidar
-https://ourcodeworld.com/articles/read/160/watch-files-and-directories-with-electron-framework
-
-
-
+[Icon Converter](https://iconverticons.com/online) Export icns, export all png 
