@@ -2,20 +2,26 @@
 
 const {
   app,
-  Menu,
   Tray,
-  BrowserWindow,
-  Notification,
-  dialog,
+  Menu,
+  nativeImage,
   clipboard,
-  nativeImage
+  ipcMain,
 } = require('electron');
 
-var chokidar = require('chokidar');
-var fs = require('fs');
-var path = require('path');
+import {
+  createWelcomeWindow,
+  createPromptWindow,
+} from './windows';
 
-// const iconPath = path.join(___dirname, '')
+import {
+  startScreenShotWatcher,
+} from './watchers';
+
+import {
+  iconPath,
+  regularTrayIcon,
+} from './helpers';
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -23,157 +29,56 @@ let mainWindow = null;
 let tray = null;
 let watcher = null;
 
-let desktopPath = null;
-
-
-
-// app.dock.hide();
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 app.on('ready', () => {
-  // createTray();
-  createBrowserWindow();
-
-  var screenshotPath = app.getPath('desktop');
-  console.log('screenshotPath',screenshotPath)
-  //
-  startWatcher(screenshotPath);
-
-
+  createWelcomeWindow(mainWindow);
+  // createPromptWindow('TEST');
+  tray = new Tray(regularTrayIcon);
+  _createTray(tray);
 });
 
 
 // -----------------------------------------------------
+// Communicate with Renderer
 // -----------------------------------------------------
 
-function createBrowserWindow() {
-
-  mainWindow = new BrowserWindow({
-    width: 900,
-    height: 500,
-    // skipTaskbar: true,
-    // autoHideMenuBar: true,
-    // backgroundColor: '#66CD00',
-    // show: false
-    // icon: path.join(__dirname, 'assets/icons/png/64x64.png')
-    // icon: __dirname + '/assets/icons/png/64x64.png'
-  });
-
-  // desktopPath = app.getPath('desktop')
-  //
-  // console.log('desktopPath',desktopPath);
+// fired from welcome.html
+ipcMain.on('start-screen-shot-watcher', (event, desktopPath) => {
+  // This lets us run the app in the background,
+  // otherwise it closes with no window.
+  app.dock.hide();
+  startScreenShotWatcher(watcher, desktopPath);
+});
 
 
-  // and load the index.html of the app.
-  mainWindow.loadURL('file://' + __dirname + '/index.html');
+// fired from prompt.html
+ipcMain.on('copy-image', (event, screenShotPath) => {
+  let screenshotImage = nativeImage.createFromPath(screenShotPath);
+  clipboard.writeImage(screenshotImage);
+  // changeTrayImage(regularTrayIcon);
+});
 
-  // now send the html some data
-  mainWindow.webContents.send('desktop-path', desktopPath);
-
-  // Open the DevTools.
-  // mainWindow.webContents.openDevTools();
-
-
-  mainWindow.on('minimize',function(event){
-    event.preventDefault();
-    mainWindow.hide();
-  });
-
-  // Emitted when the window is closed.
-  mainWindow.on('closed', function() {
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
-    mainWindow = null;
-  });
-
-
-
-}
 
 // -----------------------------------------------------
+// Create tray here so it doesnt get garbage collected
 // -----------------------------------------------------
 
-function createTray() {
-
-
-  tray = new Tray(__dirname + '/assets/trayIcon.png');
-
-  // const contextMenu = Menu.buildFromTemplate([
-  //     {label: 'Item1', type: 'radio'},
-  //     {label: 'Item2', type: 'radio'},
-  //     {label: 'Item3', type: 'radio', checked: true},
-  //     {label: 'Item4', type: 'radio'}
-  //   ])
+function _createTray(tray) {
 
   var contextMenu = Menu.buildFromTemplate([
-    { label: 'Show App', click:  function(){
-        mainWindow.show();
-    } },
-    { label: 'Quit', click:  function(){
-        app.isQuiting = true;
-        app.quit();
+    { label: 'Quit ScreenShit', click:  function(){
+      app.isQuiting = true;
+      app.quit();
     } }
-]);
-    tray.setToolTip('This is my application.')
-    tray.setContextMenu(contextMenu)
+  ]);
 
-
-
-
+  tray.setToolTip('ScreenShit')
+  tray.setContextMenu(contextMenu)
 }
 
-// WATCHER
-
-function startWatcher(path) {
-
-  let scanComplete = false;
-
-  watcher = chokidar.watch(path, {
-      ignored: /[\/\\]\./,
-      persistent: true
-  });
-
-  function onWatcherReady(){
-      console.info('From here can you check for real changes, the initial scan has been completed.');
-      scanComplete = true;
-  }
-
-    watcher
-    .on('add', function(path) {
-
-      if(scanComplete) {
-        if(path.includes("Screen Shot")) {
-          console.log("SCREEN SHOT",path);
-
-          const dialogOptions = {type: 'info', buttons: ['OK', 'Cancel'], message: 'Copy image to clipboard?'}
-
-          dialog.showMessageBox(dialogOptions, i => {
-
-            let screenshotImage = nativeImage.createFromPath(path)
-            console.log(screenshotImage)
-
-            if(i === 0) {
-              clipboard.writeImage(screenshotImage)
-            }
-
-          })
-
-          // var notif = new Notification({
-          //   'title': 'New Screenshot',
-          //   // 'body':  'native html5 notif',
-          //   'icon': __dirname + '/assets/notificationIcon.png'
-          // });
-          // notif.show();
-        }
-      }
-
-    })
-
-    .on('ready', onWatcherReady)
-    .on('raw', function(event, path, details) {
-        // This event should be triggered everytime something happens.
-        console.log('Raw event info:', event, path, details);
-    });
+// changes when user takes screenshot
+export function changeTrayImage(trayIcon) {
+  tray.setImage(trayIcon);
 }
