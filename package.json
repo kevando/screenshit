@@ -1,8 +1,8 @@
 {
   "name": "screen-shit-forge",
-  "productName": "screen-shit-forge",
-  "version": "1.0.0",
-  "description": "My Electron application description",
+  "productName": "Screen Shit",
+  "version": "0.1.0",
+  "description": "Do more with screenshots",
   "main": "src/index.js",
   "scripts": {
     "start": "electron-forge start",
@@ -12,7 +12,7 @@
     "lint": "eslint src --color"
   },
   "keywords": [],
-  "author": "k2",
+  "author": "kevando",
   "license": "MIT",
   "config": {
     "forge": {
@@ -29,7 +29,8 @@
         ]
       },
       "electronPackagerConfig": {
-        "packageManager": "yarn"
+        "packageManager": "yarn",
+        "icon": "src/assets/icons/poop.icns"
       },
       "electronWinstallerConfig": {
         "name": "screen_shit_forge"

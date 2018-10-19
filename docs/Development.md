@@ -2,14 +2,12 @@
 
 ## Local development
 
-```
-git clone...
-```
 
-getting shit working
+Get shit working
 
 
 ```
+git clone [...]
 rm -rf node_modules
 npm install
 electron-forge start  
