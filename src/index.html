@@ -14,6 +14,10 @@
     <span id="messageLogger"></span>
     <ul id="log-container">
     </ul>
+
+    <h2>notif</h2>
+    <button type="button" id="notif">do notif</button>
+
     <script>'use strict';
         var chokidar = require('chokidar');
         var fs = require('fs');
@@ -76,6 +80,25 @@
                 console.log('Raw event info:', event, path, details);
             });
         }
+
+        // NOTIF
+
+        document.getElementById("notif").addEventListener("click",function(e){
+            // const {Notification} = require('electron').Notification;
+            console.log('NOTIF??')
+
+            Notification.requestPermission().then(function(result){
+              console.log('requested permission',result);
+              var notif = new Notification('Electrong Notif!!', {
+                'body':  'native html5 notif'
+              });
+            });
+
+
+        },false);
+
+        // START
+
         document.getElementById("start").addEventListener("click",function(e){
             const {dialog} = require('electron').remote;
             dialog.showOpenDialog({
@@ -88,6 +111,8 @@
                 }
             });
         },false);
+
+        // STOP
          document.getElementById("stop").addEventListener("click",function(e){
              if(!watcher){
                  console.log("You need to start first the watcher");

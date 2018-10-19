@@ -22,6 +22,10 @@ electron-forge start
 ### Chokidar
 https://ourcodeworld.com/articles/read/160/watch-files-and-directories-with-electron-framework
 
+### notifications
+
+https://www.youtube.com/watch?v=ihcsKfIN6YU
+
 
 
 
