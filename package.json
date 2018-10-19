@@ -1,8 +1,8 @@
 {
-  "name": "screen-shit-forge",
-  "productName": "Screen Shit",
-  "version": "0.1.0",
-  "description": "Do more with screenshots",
+  "name": "ScreenShit",
+  "productName": "ScreenShit",
+  "version": "1.0.0",
+  "description": "Assistance when you need it.",
   "main": "src/index.js",
   "scripts": {
     "start": "electron-forge start",
@@ -11,7 +11,7 @@
     "publish": "electron-forge publish",
     "lint": "eslint src --color"
   },
-  "keywords": [],
+  "keywords": ["screenshot", "screen shot"],
   "author": "kevando",
   "license": "MIT",
   "config": {
@@ -33,17 +33,17 @@
         "icon": "app/icon/icon.icns"
       },
       "electronWinstallerConfig": {
-        "name": "screen_shit_forge"
+        "name": "screen_shit"
       },
       "electronInstallerDebian": {},
       "electronInstallerRedhat": {},
       "github_repository": {
-        "owner": "",
-        "name": ""
+        "owner": "kevando",
+        "name": "screenshit"
       },
       "windowsStoreConfig": {
         "packageName": "",
-        "name": "screenshitforge"
+        "name": "screenshit"
       }
     }
   },

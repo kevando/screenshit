@@ -23,10 +23,11 @@ export function createWelcomeWindow(mainWindow) {
 
   mainWindow = new BrowserWindow({
     width: 600,
-    height: 400,
+    height: 450,
     // skipTaskbar: true,
     // autoHideMenuBar: true,
-    // show: false
+    // show: false,
+    backgroundColor: '#bbb',
   });
 
   // and load the index.html of the app.

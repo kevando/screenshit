@@ -40,16 +40,20 @@ app.on('ready', () => {
 });
 
 
+
 // -----------------------------------------------------
 // Communicate with Renderer
 // -----------------------------------------------------
 
 // fired from welcome.html
 ipcMain.on('start-screen-shot-watcher', (event, desktopPath) => {
+  startScreenShotWatcher(watcher, desktopPath);
+
   // This lets us run the app in the background,
   // otherwise it closes with no window.
   app.dock.hide();
-  startScreenShotWatcher(watcher, desktopPath);
+  // TODO this should get handled differently
+  // works for now. puts app in dock during set up
 });
 
 

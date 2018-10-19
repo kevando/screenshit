@@ -6,26 +6,22 @@
     <link rel="stylesheet" href="css/main.css">
   </head>
   <body>
-    <h1>ScreenShit</h1>
-    <br>
-    <p>This application runs in the background and detects when you take a screenshot. You can quit the app by clicking the app icon in the system tray.</p>
-    <p>Your desktop path is: <b><span id="DesktopPath"></span></b></p>
+    <img src="../../app/icon/64x64.png" />
+    <h2>ScreenShit</h2>
+    <h3>runs whenever you take a screenshot.</h3>
+    <p class="footer"><u>Version 1.0</u> You can copy the image (and paste it into apps like iMessage).</p>
     <br />
-    <button type="button" id="enable-btn">Enable</button>
+    <button type="button" id="enable-btn">Start</button>
     <!-- <button type="button" id="close-btn">Exit</button> -->
 
     <script>
         const {ipcRenderer, remote} = require('electron');
         var desktopPath = remote.app.getPath('desktop');
 
-        // Display User's desktop path for debug purposes
-        document.getElementById("DesktopPath").innerHTML = desktopPath;
-
         // Enable Clicked
         document.getElementById("enable-btn").addEventListener("click", function (e) {
           ipcRenderer.send('start-screen-shot-watcher', desktopPath)
           var window = remote.getCurrentWindow();
-          // window.close();
           window.hide();
         });
 
