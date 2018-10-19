@@ -41,6 +41,9 @@
                 console.log('File', path, 'has been added');
                 if(showInLogFlag){
                     addLog("File added : "+path,"new");
+                    var notif = new Notification('New file added', {
+                      'body':  'native html5 notif'
+                    });
                 }
             })
             .on('addDir', function(path) {

@@ -1,11 +1,14 @@
 'use strict';
 
-const electron = require('electron');
-const app = electron.app;  // Module to control application life.
-const BrowserWindow = electron.BrowserWindow;  // Module to create native browser window.
+const {app, Menu, Tray, BrowserWindow} = require('electron');
+
+// const electron = require('electron');
+// const app = electron.app;  // Module to control application life.
+// const BrowserWindow = electron.BrowserWindow;  // Module to create native browser window.
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 var mainWindow = null;
+let tray = null;
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function() {
@@ -19,6 +22,22 @@ app.on('window-all-closed', function() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 app.on('ready', function() {
+
+  // tray stuff
+  tray = new Tray(__dirname + '/trayIcon.png');
+
+  const contextMenu = Menu.buildFromTemplate([
+      {label: 'Item1', type: 'radio'},
+      {label: 'Item2', type: 'radio'},
+      {label: 'Item3', type: 'radio', checked: true},
+      {label: 'Item4', type: 'radio'}
+    ])
+    tray.setToolTip('This is my application.')
+    tray.setContextMenu(contextMenu)
+
+
+
+
   // Create the browser window.
   mainWindow = new BrowserWindow({width: 1000, height: 600});
 
@@ -36,4 +55,8 @@ app.on('ready', function() {
     // when you should delete the corresponding element.
     mainWindow = null;
   });
+
+
+
+
 });
