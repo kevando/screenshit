@@ -30,7 +30,7 @@
       },
       "electronPackagerConfig": {
         "packageManager": "yarn",
-        "icon": "src/assets/icons/poop.icns"
+        "icon": "app/icon/icon.icns"
       },
       "electronWinstallerConfig": {
         "name": "screen_shit_forge"

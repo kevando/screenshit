@@ -2,23 +2,21 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>sscreen shit</title>
+    <title>Screen Shit</title>
   </head>
   <body>
     <h1>Screen Shit</h1>
     <br>
-
-    <br>
-    <span id="messageLogger"></span>
-    <ul id="log-container">
-    </ul>
+    <p>Your desktop path is: <b><span id="DesktopPath"></span></b></p>
 
 
     <script>
-        // var chokidar = require('chokidar');
-        // var fs = require('fs');
-        // var watcher = null;
-        // var showInLogFlag = false;
+
+        var app = require('electron').remote.app;
+
+        var desktopPath = app.getPath('desktop')
+
+        displayDesktopPath(desktopPath)
 
 
         // NOTIF
@@ -63,9 +61,9 @@
          //         document.getElementById("messageLogger").innerHTML = "Nothing is being watched";
          //     }
          // },false);
-         // function resetLog(){
-         //     return document.getElementById("log-container").innerHTML = "";
-         // }
+         function displayDesktopPath(path){
+             document.getElementById("DesktopPath").innerHTML = path;
+         }
          // function addLog(message,type){
          //     var el = document.getElementById("log-container");
          //     var newItem = document.createElement("LI");       // Create a <li> node
