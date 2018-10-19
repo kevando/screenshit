@@ -6,17 +6,25 @@ A simple MacOS desktop application designed to make you more efficient with your
 
 ## Installation
 
-[Download the latest release](https://github.com/kevando/screenshit.git) and give it a spin (MacOS only and might only work on OSX 10.13.6 )  
+1. Download the latest [ScreenShit.zip](https://github.com/kevando/screenshit/releases/download/1.0.0/ScreenShit.zip)
+2. Unzip it (it's safe)
+3. Right click on ScreenShit.app and select open
 
-Please report any bugs.
+![Help1](docs/screen_shot_rightclickapp.png)
 
+## Usage
 
-## Open Source
+1. Click start
+2. Take screen shot (CMD + SHIFT + 4)
+3. Copy image to clipboard
+4. Paste (CMD + V) image into apps like iMessage
+
+## Development
 
 I made this app using Electron, so you can run this locally if you want.
 
 
-#### Local Development
+#### Run locally from source code
 
 
 ```
