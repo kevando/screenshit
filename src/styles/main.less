@@ -1,0 +1,83 @@
+@white: #ffffff;
+
+@background-color: #C0C0C0;
+@text-color: #333333;
+@header-background-color: #1908A5;
+@divider-color: #808080;
+
+
+* {
+  font-family: 'Helvetica';
+}
+html,body,#App {
+  height: 100%
+}
+
+p {
+  color: @text-color;
+}
+
+
+.window {
+  background: @background-color;
+  height: 100%;
+}
+
+
+.header {
+  background: @header-background-color;
+  height: 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h1 {
+    margin: 0;
+    color: @white;
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: 0.07em;
+    margin-left: 3px;
+  }
+}
+
+.content {
+  margin: 20px 20px 20px 20px;
+
+
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+
+  .btn {
+    width: 80px;
+  }
+}
+
+.divider {
+  border: solid;x
+  border-width: 1px 0 1px 0;
+  border-top-color: @divider-color;
+  border-bottom-color: @white;
+  margin: 0 10px;
+}
+
+.btn-shadow {
+  box-shadow: -1px -1px 0px #ffffff, 1px 1px 0px #000000;
+}
+
+
+.btn {
+  background: @background-color;
+  border-top: solid 1px #DFDFDF;
+  border-right: solid 1px #808080;
+  border-bottom: solid 1px #808080;
+  border-left: solid 1px #DFDFDF;
+
+  .btn-shadow();
+
+
+}

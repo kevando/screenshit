@@ -21,30 +21,32 @@ import {
 
 export function createWelcomeWindow(mainWindow) {
 
-  mainWindow = new BrowserWindow({
-    width: 600,
-    height: 450,
-    // skipTaskbar: true,
-    // autoHideMenuBar: true,
-    // show: false,
-    backgroundColor: '#bbb',
-  });
-
-  // and load the index.html of the app.
-  mainWindow.loadURL('file://' + __dirname + '/html/welcome.html');
-
-  mainWindow.on('minimize',function(event){
-    event.preventDefault();
-    mainWindow.hide();
-  });
-
-  // Emitted when the window is closed.
-  mainWindow.on('closed', function() {
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
-    mainWindow = null;
-  });
+  // mainWindow = new BrowserWindow({
+  //   width: 900,
+  //   height: 450,
+  //   // skipTaskbar: true,
+  //   // autoHideMenuBar: true,
+  //   frame: false,
+  // });
+  //
+  // // Debug
+  // promptWindow.webContents.openDevTools();
+  //
+  // // and load the index.html of the app.
+  // mainWindow.loadURL('file://' + __dirname + '/html/welcome.html');
+  //
+  // mainWindow.on('minimize',function(event){
+  //   event.preventDefault();
+  //   mainWindow.hide();
+  // });
+  //
+  // // Emitted when the window is closed.
+  // mainWindow.on('closed', function() {
+  //   // Dereference the window object, usually you would store windows
+  //   // in an array if your app supports multi windows, this is the time
+  //   // when you should delete the corresponding element.
+  //   mainWindow = null;
+  // });
 }
 
 // -----------------------------------------------------

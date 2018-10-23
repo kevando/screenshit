@@ -6,30 +6,30 @@
     <link rel="stylesheet" href="css/main.css">
   </head>
   <body>
-    <img src="../../app/icon/64x64.png" />
+    <!-- <img src="../../app/icon/64x64.png" />
     <h2>ScreenShit</h2>
     <h3>runs whenever you take a screenshot.</h3>
     <p class="footer"><u>Version 1.0</u> You can copy the image (and paste it into apps like iMessage).</p>
     <br />
-    <button type="button" id="enable-btn">Start</button>
+    <button type="button" id="enable-btn">Start</button> -->
     <!-- <button type="button" id="close-btn">Exit</button> -->
 
     <script>
-        const {ipcRenderer, remote} = require('electron');
-        var desktopPath = remote.app.getPath('desktop');
-
-        // Enable Clicked
-        document.getElementById("enable-btn").addEventListener("click", function (e) {
-          ipcRenderer.send('start-screen-shot-watcher', desktopPath)
-          var window = remote.getCurrentWindow();
-          window.hide();
-        });
-
-        // Close Clicked
-        document.getElementById("close-btn").addEventListener("click", function (e) {
-         var window = remote.getCurrentWindow();
-         window.close();
-        });
+        // const {ipcRenderer, remote} = require('electron');
+        // var desktopPath = remote.app.getPath('desktop');
+        //
+        // // Enable Clicked
+        // document.getElementById("enable-btn").addEventListener("click", function (e) {
+        //   ipcRenderer.send('start-screen-shot-watcher', desktopPath)
+        //   var window = remote.getCurrentWindow();
+        //   window.hide();
+        // });
+        //
+        // // Close Clicked
+        // document.getElementById("close-btn").addEventListener("click", function (e) {
+        //  var window = remote.getCurrentWindow();
+        //  window.close();
+        // });
 
     </script>
   </body>
