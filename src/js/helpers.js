@@ -1,7 +1,13 @@
 
 // var path = require('path'); // probly better to use this
 
-export const iconPath = __dirname + '/../app/icon/';
+// for  live reloader
+export const isDevMode = process.execPath.match(/[\\/]electron/);
+
+export const projectRootPath = __dirname + '/../../';
+
+export const iconPath = __dirname + '/../../app/icon/';
+
 
 // Tray Icons
 export const activeTrayIcon = iconPath + '16x16.png';

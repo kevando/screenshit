@@ -6,115 +6,39 @@ const storage = require('electron-json-storage');
 import {
   iconPath,
   regularTrayIcon,
-} from './helpers';
+  isDevMode
+} from './js/helpers';
+
+import {
+  createWelcomeWindow,
+} from './js/windows';
+
+import {
+  startScreenShotWatcher,
+} from './js/watcher';
 
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let mainWindow;
-let promptWindow;
+
 let tray;
-let watcher;
 
-const isDevMode = process.execPath.match(/[\\/]electron/);
 
+// Trying to use a global var
+global.welcomeWindow = null;
+global.promptWindow = null;
+global.watcher = null;
+// used in watcher for chokidar.
+// scanComplete also tells us if watcher is enabled or not.
+// global.scanComplete = false;
+
+
+// Development settings
 if (isDevMode) enableLiveReload({ strategy: 'react-hmr' });
 
 
-// -----------------------------------------------------
-// Create windows
-// -----------------------------------------------------
-
-const _createWelcomeWindow = async () => {
-
-  mainWindow = new BrowserWindow({
-    width: 900,
-    height: 450,
-    frame: false,
-    resizable: false,
-  });
-
-  mainWindow.windowContainer = 'Welcome';
-
-  mainWindow.loadURL(`file://${__dirname}/index.html`);
-
-  if (isDevMode) {
-    await installExtension(REACT_DEVELOPER_TOOLS);
-    mainWindow.webContents.openDevTools();
-  }
-
-  mainWindow.on('closed', () => {
-    mainWindow = null;
-  });
-};
 
 
-// -----------------------------------------------------
-// Prompt Window
-// -----------------------------------------------------
-
-function _createPromptWindow(screenShotPath) {
-
-  // this might get garbage collected
-  promptWindow = new BrowserWindow({
-    width: 350,
-    height: 180,
-    backgroundColor: '#ddd',
-    frame: false,
-  });
-
-  // set variable before rendering
-  promptWindow.screenShotPath = screenShotPath
-
-  promptWindow.windowContainer = 'Prompt';
-
-  promptWindow.loadURL(`file://${__dirname}/index.html`);
-
-  // Debug
-  // promptWindow.webContents.openDevTools();
-
-  promptWindow.on('minimize',function(event){
-    event.preventDefault();
-    promptWindow.hide();
-  });
-
-  // Emitted when the window is closed.
-  // promptWindow.on('closed', function() {
-  //   changeTrayImage(regularTrayIcon);
-  //   promptWindow = null;
-  // });
-}
-
-
-const createWindow = async () => {
-  // Create the browser window.
-  mainWindow = new BrowserWindow({
-    width: 800,
-    height: 500,
-  });
-
-  // and load the index.html of the app.
-  mainWindow.loadURL(`file://${__dirname}/index.html`);
-
-  // Open the DevTools.
-  if (isDevMode) {
-    await installExtension(REACT_DEVELOPER_TOOLS);
-    mainWindow.webContents.openDevTools();
-  }
-
-  // Emitted when the window is closed.
-  mainWindow.on('closed', () => {
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
-    mainWindow = null;
-  });
-};
-
-// -----------------------------------------------------
-// -----------------------------------------------------
-// -----------------------------------------------------
-// -----------------------------------------------------
 
 
 // This method will be called when Electron has finished
@@ -146,7 +70,7 @@ app.on('ready', () => {
   // });
 
   // show welcome window every time app loads.
-  _createWelcomeWindow();
+  createWelcomeWindow();
 
   // DEBUG
   // _createPromptWindow('file/imagepage')
@@ -155,8 +79,8 @@ app.on('ready', () => {
   tray = new Tray(regularTrayIcon);
   _createTray(tray);
 
-
-  _startScreenShotWatcher();
+  const desktopPath = app.getPath('desktop');
+  startScreenShotWatcher(desktopPath);
 
 });
 
@@ -216,49 +140,4 @@ function _createTray(tray) {
 // changes when user takes screenshot
 export function changeTrayImage(trayIcon) {
   tray.setImage(trayIcon);
-}
-
-
-// -----------------------------------------------------
-// Watch Desktop for new screen shots
-// -----------------------------------------------------
-
-var chokidar = require('chokidar');
-
-function _startScreenShotWatcher() {
-
-  const desktopPath = app.getPath('desktop');
-
-  let scanComplete = false;
-
-  // PATH WATCHER
-  watcher = chokidar.watch(desktopPath, {
-    ignored: /[\/\\]\./,
-    persistent: true
-  });
-
-  function onWatcherReady(){
-    console.info('From here can you check for real changes, the initial scan has been completed.');
-    scanComplete = true;
-  }
-
-  function onAdd(screenShotPath){
-    if(scanComplete) {
-      if(screenShotPath.includes("Screen Shot")) {
-        _createPromptWindow(screenShotPath);
-        // changeTrayImage(activeTrayIcon);
-      }
-    }
-  }
-
-  function onRaw(event, path, details) {
-    // This event should be triggered everytime something happens.
-    // console.log('Raw event info:', event, path, details);
-  }
-
-  // PATH WATCHER LISTENERS
-  watcher
-    .on('add', onAdd)
-    .on('ready', onWatcherReady)
-    .on('raw', onRaw);
 }
