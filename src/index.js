@@ -1,88 +1,78 @@
 import { app, BrowserWindow, Menu, Tray, nativeImage, clipboard, ipcMain } from 'electron';
 import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
 import { enableLiveReload } from 'electron-compile';
-const storage = require('electron-json-storage');
+import storage from 'electron-json-storage';
 
 import {
   iconPath,
   regularTrayIcon,
-  isDevMode
+  isDevMode,
+  activeTrayIcon
 } from './js/helpers';
 
 import {
-  createWelcomeWindow,
+  createOnboardingWelcomeWindow,
+  createOnboardingConfigWindow,
 } from './js/windows';
 
 import {
   startScreenShotWatcher,
 } from './js/watcher';
 
+import {
+  createTray,
+  changeTrayImage
+} from './js/tray';
 
+
+// -----------------------------------------------------
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 
-let tray;
-
-
-// Trying to use a global var
+// electron stuff
 global.welcomeWindow = null;
 global.promptWindow = null;
 global.watcher = null;
-// used in watcher for chokidar.
-// scanComplete also tells us if watcher is enabled or not.
-// global.scanComplete = false;
+global.tray = null;
+
+// App variables that should probly go somewhere else as this list grows
+global.onboardingComplete = false;
+global.copyImageByDefault = false;
+global.activeScreenShotPath = null;
+global.desktopPath = app.getPath('desktop');
 
 
 // Development settings
 if (isDevMode) enableLiveReload({ strategy: 'react-hmr' });
 
 
-
-
-
+// ==============================================================
+// MAIN FUNCTION
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
 
-  // const defaultDataPath = storage.getDefaultDataPath()
-  // console.log(defaultDataPath)
+  // Should we show onboarding????
+  storage.get('onboarding', function(error, data) {
+    if (error) throw error;
+    if(data.completed) {
+      onboardingComplete = true;
+    } else {
+      createOnboardingWelcomeWindow();
+    }
+  });
 
-  // storage.getAll((error, data) => {
-  //   if (error) throw error;
-  //   console.log('data',data);
-  // });
+  // SECOND Create a new system tray icon
+  tray = new Tray(activeTrayIcon);
+  createTray();
 
-  // is app enabled does data persist?
-  // storage.get('settings', function(error, data) {
-  //   if (error) throw error;
-  //
-  //   console.log(data);
-  //   if(Object.keys(data).length === 0) {
-  //     console.log('no settings ever saved')
-  //
-  //     storage.set('settings', { foo: 'bar' }, function(error) {
-  //       if (error) throw error;
-  //     });
-  //
-  //   }
-  // });
-
-  // show welcome window every time app loads.
-  createWelcomeWindow();
-
-  // DEBUG
-  // _createPromptWindow('file/imagepage')
-
-  // Create system tray every time app loads
-  tray = new Tray(regularTrayIcon);
-  _createTray(tray);
-
-  const desktopPath = app.getPath('desktop');
+  // THIRD start the file watcher
   startScreenShotWatcher(desktopPath);
 
 });
+
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
@@ -92,52 +82,53 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
+// ==============================================================
 
-app.on('activate', () => {
-  // On OS X it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (mainWindow === null) {
-    createWindow();
-  }
-});
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
 
 
 // -----------------------------------------------------
 // Communicate with Renderer
 // -----------------------------------------------------
 
-ipcMain.on('start-screen-shot-watcher', (event, desktopPath) => {
-  console.log('?',desktopPath)
+// USER CLICKED DONE IN ONBOARDING
+ipcMain.on('first-screen-shot-saved', (event, state) => {
+
+  // If user checked Copy Image, lets copy that image!
+  if(state.copyImage === true)
+    copyActiveScreenShot();
+
+  // Set this so user does not have to see it in the future
+  storage.set('onboarding', { completed: true });
+  onboardingComplete = true;
+
+  // lets also send a response back to the onboarding window to close
+  event.sender.send('image-process-complete', 'success');
 });
 
-ipcMain.on('copy-image', (event, screenShotPath) => {
-  // let screenshotImage = nativeImage.createFromPath(screenShotPath);
-  // clipboard.writeImage(screenshotImage);
-  // changeTrayImage(regularTrayIcon);
+// USER CLICKED DONE IN PROMPT
+ipcMain.on('done-with-screen-shot', (event, state) => {
+
+  // If user checked Copy Image, lets copy that image!
+  if(state.copyImage === true)
+    copyActiveScreenShot();
+
+  // let window know that it can close
+  event.sender.send('image-process-complete', 'success')
 });
 
 
 // -----------------------------------------------------
-// Create tray here so it doesnt get garbage collected
+// Handle Screen shot.
+// I expect this function to grow into the core application code
 // -----------------------------------------------------
 
-function _createTray(tray) {
+function copyActiveScreenShot() {
+  if(activeScreenShotPath) {
+    const screenshotImage = nativeImage.createFromPath(activeScreenShotPath);
+    clipboard.writeImage(screenshotImage);
+    activeScreenShotPath = null;
+  } else {
+    console.log('NO activeScreenShotPath');
+  }
 
-  var contextMenu = Menu.buildFromTemplate([
-    { label: 'Quit ScreenShit', click:  function(){
-      app.isQuiting = true;
-      app.quit();
-    } }
-  ]);
-
-  tray.setToolTip('ScreenShit')
-  tray.setContextMenu(contextMenu)
-}
-
-// changes when user takes screenshot
-export function changeTrayImage(trayIcon) {
-  tray.setImage(trayIcon);
 }

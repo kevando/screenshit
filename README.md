@@ -2,6 +2,7 @@
 
 ![Logo](app/icon/128x128.png)
 
+
 A simple MacOS desktop application designed to make you more efficient with your screen shots. Like the new option that pops up on your iPhone when you take a screenshot, but for desktop.
 
 ## How to install

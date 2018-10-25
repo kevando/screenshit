@@ -2,12 +2,12 @@ import React from 'react';
 import {ipcRenderer, remote} from 'electron';
 import Window from '../components/Window';
 
-export default class App extends React.Component {
+export default class OnboardingConfig extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      copyImage: remote.getCurrentWindow().copyImageByDefault,
+      copyImage: false,
       // keepFile: true,
     }
     this._onDone = this._onDone.bind(this);
@@ -16,9 +16,11 @@ export default class App extends React.Component {
 
   componentDidMount() {
     ipcRenderer.on('image-process-complete', (event, imageProcessResponse) => {
+
+      // For now, just close this window no matter what. later on, show a success window
       var window = remote.getCurrentWindow();
       window.close();
-    });
+    })
   }
 
   _handleInputChange(event) {
@@ -29,32 +31,33 @@ export default class App extends React.Component {
   }
 
   _onDone() {
-    ipcRenderer.send('done-with-screen-shot', this.state);
+    ipcRenderer.send('first-screen-shot-saved', this.state);
   }
 
   render() {
 
-    var screenShotPath = remote.getCurrentWindow().screenShotPath;
-
     return (
       <Window.Container>
-
-        <Window.Header title='ScreenShit'  />
-
+        <Window.Header title='Welcome' />
         <Window.Content>
-          <h3>What do you want to do?</h3>
+          <div className='left'>
+            <img src= '../app/icon/96x96.png' />
+          </div>
+          <div className='right'>
+            <h3>What do you want to do?</h3>
 
+            <br />
             <div className="checkbox">
               <label htmlFor="copy_image">
                   <input type="checkbox" id="copy_image" name="copyImage" checked={this.state.copyImage} onChange={this._handleInputChange } />
                   Copy Image
+                  <div className="sub">This is very helpful because you can paste images into most websites and applications</div>
               </label>
             </div>
 
+          </div>
         </Window.Content>
-
         <Window.Divider />
-
         <Window.Footer>
           <button className='btn' onClick={this._onDone}>Done</button>
         </Window.Footer>

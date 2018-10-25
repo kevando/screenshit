@@ -14,14 +14,24 @@ class Container extends React.Component {
   }
 }
 
-const Header = ({title}) => {
+// --------------------------------
+// Header
+// --------------------------------
+
+const Header = ({title, closeButton}) => {
     return (
       <div className='header'>
         <div className='title'>
           <h1>{title}</h1>
         </div>
-        <div className='options'>
-          <button className='btn close'>x</button>
+        <div className='buttons'>
+        {closeButton === true &&
+          <div className="icon">
+            <a className="btn close" href="#">
+              <i className="fas fa-times"></i>
+            </a>
+          </div>
+        }
         </div>
     </div>
   );

@@ -23,3 +23,9 @@ html/css/js is in `/src` and image assets are in `/app`
 
 
 [Icon Converter](https://iconverticons.com/online) Export icns, export all png 
+
+
+
+https://codepen.io/kevando_/pen/YJOmmj
+
+http://lesscss.org/#mixins

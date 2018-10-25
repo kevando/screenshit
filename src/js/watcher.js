@@ -1,8 +1,9 @@
-
+import { ipcMain } from 'electron';
 var chokidar = require('chokidar');
 
 import {
   createPromptWindow,
+  createOnboardingConfigWindow
 } from './windows';
 
 // -----------------------------------------------------
@@ -12,8 +13,6 @@ import {
 
 
 export function startScreenShotWatcher(path) {
-
-
 
   let scanComplete = false;
 
@@ -31,7 +30,14 @@ export function startScreenShotWatcher(path) {
   function onAdd(screenShotPath){
     if(scanComplete) {
       if(screenShotPath.includes("Screen Shot")) {
-        createPromptWindow(screenShotPath);
+
+        // We found a new file and yes it's a SCREEN SHOT!
+        activeScreenShotPath = screenShotPath;
+
+        if(onboardingComplete === true)
+          createPromptWindow(screenShotPath);
+        else
+          createOnboardingConfigWindow(screenShotPath);
         // changeTrayImage(activeTrayIcon);
       }
     }
