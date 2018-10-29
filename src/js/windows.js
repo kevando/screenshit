@@ -100,25 +100,16 @@ export const createPromptWindow = async () => {
     frame: false,
   });
 
-  // set variable before rendering
   promptWindow.screenShotPath = activeScreenShotPath;
   promptWindow.copyImageByDefault = copyImageByDefault;
-
   promptWindow.windowContainer = 'Prompt';
 
   promptWindow.loadURL(`file://${__dirname}/../index.html`);
-
-  // Debug
-  promptWindow.webContents.openDevTools();
-
-  promptWindow.on('minimize',function(event){
-    event.preventDefault();
-    promptWindow.hide();
-  });
 
   // Emitted when the window is closed.
   // promptWindow.on('closed', function() {
   //   changeTrayImage(regularTrayIcon);
   //   promptWindow = null;
   // });
+    // promptWindow.webContents.openDevTools();
 }

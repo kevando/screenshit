@@ -37,7 +37,7 @@ global.tray = null;
 
 // App variables that should probly go somewhere else as this list grows
 global.onboardingComplete = false;
-global.copyImageByDefault = false;
+global.copyImageByDefault = true;
 global.activeScreenShotPath = null;
 global.desktopPath = app.getPath('desktop');
 
@@ -54,7 +54,7 @@ if (isDevMode) enableLiveReload({ strategy: 'react-hmr' });
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
 
-  // Should we show onboarding????
+  // FIRST we show onboarding????
   storage.get('onboarding', function(error, data) {
     if (error) throw error;
     if(data.completed) {

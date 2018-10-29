@@ -26,15 +26,16 @@ export default class OnboardingWelcome extends React.Component {
 
     return (
       <Window.Container>
-        <Window.Header title='Welcome' />
+        <Window.Header title='Welcome to ScreenShit' />
         <Window.Content>
           <div className='left'>
             <img src= '../app/icon/96x96.png' />
           </div>
           <div className='right'>
             <h3>Do More With Screen Shots</h3>
+            <br />
             <p>Take a screen shot right now to continue.</p>
-            <p>If you have Mojave, this may take a second.</p>
+            <p>Press <kbd>CMD ⌘</kbd> + <kbd>SHIFT </kbd> + <kbd>3</kbd> to take a screenshot</p>
           </div>
         </Window.Content>
         <Window.Divider />
