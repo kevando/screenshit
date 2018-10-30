@@ -1,5 +1,5 @@
 import { ipcMain } from 'electron';
-var chokidar = require('chokidar');
+var fs = require('fs');
 
 import {
   createPromptWindow,
@@ -10,47 +10,67 @@ import {
 // Watch Desktop for new screen shots
 // -----------------------------------------------------
 
-
-
 export function startScreenShotWatcher(path) {
+  console.log('startScreenShotWatcher',path)
 
-  let scanComplete = false;
+  fs.watch(path,  (eventType, filename) => {
+    console.log('eventType',eventType)
+  if (filename && eventType === 'rename') {
+    console.log(filename.substring(0,11));
+    if(filename.substring(0,11) === "Screen Shot") {
 
-  // PATH WATCHER
-  watcher = chokidar.watch(path, {
-    ignored: /[\/\\]\./,
-    persistent: true
-  });
+      // We found a new file and yes it's a SCREEN SHOT!
+      activeScreenShotPath = path + '/' + filename;
 
-  function onWatcherReady(){
-    console.info('From here can you check for real changes, the initial scan has been completed.');
-    scanComplete = true;
-  }
+      if(onboardingComplete === true)
+        createPromptWindow(activeScreenShotPath);
+      else
+        createOnboardingConfigWindow(activeScreenShotPath);
+      // changeTrayImage(activeTrayIcon);
 
-  function onAdd(screenShotPath){
-    if(scanComplete) {
-      if(screenShotPath.includes("Screen Shot")) {
 
-        // We found a new file and yes it's a SCREEN SHOT!
-        activeScreenShotPath = screenShotPath;
-
-        if(onboardingComplete === true)
-          createPromptWindow(screenShotPath);
-        else
-          createOnboardingConfigWindow(screenShotPath);
-        // changeTrayImage(activeTrayIcon);
-      }
     }
+    // Prints: <Buffer ...>
   }
+});
 
-  function onRaw(event, path, details) {
-    // This event should be triggered everytime something happens.
-    // console.log('Raw event info:', event, path, details);
-  }
-
-  // PATH WATCHER LISTENERS
-  watcher
-    .on('add', onAdd)
-    .on('ready', onWatcherReady)
-    .on('raw', onRaw);
+  // let scanComplete = false;
+  //
+  // // PATH WATCHER
+  // watcher = chokidar.watch(path, {
+  //   ignored: /[\/\\]\./,
+  //   persistent: true
+  // });
+  //
+  // function onWatcherReady(){
+  //   console.info('From here can you check for real changes, the initial scan has been completed.');
+  //   scanComplete = true;
+  // }
+  //
+  // function onAdd(screenShotPath){
+  //   if(scanComplete) {
+  //     if(screenShotPath.includes("Screen Shot")) {
+  //
+  //       // We found a new file and yes it's a SCREEN SHOT!
+  //       activeScreenShotPath = screenShotPath;
+  //
+  //       if(onboardingComplete === true)
+  //         createPromptWindow(screenShotPath);
+  //       else
+  //         createOnboardingConfigWindow(screenShotPath);
+  //       // changeTrayImage(activeTrayIcon);
+  //     }
+  //   }
+  // }
+  //
+  // function onRaw(event, path, details) {
+  //   // This event should be triggered everytime something happens.
+  //   // console.log('Raw event info:', event, path, details);
+  // }
+  //
+  // // PATH WATCHER LISTENERS
+  // watcher
+  //   .on('add', onAdd)
+  //   .on('ready', onWatcherReady)
+  //   .on('raw', onRaw);
 }

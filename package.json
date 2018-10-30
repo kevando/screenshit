@@ -1,8 +1,8 @@
 {
-  "name": "ScreenShit",
-  "productName": "ScreenShit",
+  "name": "screen-shit",
+  "productName": "screen-shit",
   "version": "1.0.0",
-  "description": "Assistance when you need it.",
+  "description": "Do more with screen shots",
   "main": "src/index.js",
   "scripts": {
     "start": "electron-forge start",
@@ -30,7 +30,10 @@
       },
       "electronPackagerConfig": {
         "packageManager": "yarn",
-        "icon": "app/icon/icon.icns"
+        "icon": "app/icon/icon.icns",
+        "osxSign": {
+          "identity": "Developer ID Application: Kevaid Inc. (E34JX9GA2A)"
+        }
       },
       "electronWinstallerConfig": {
         "name": "screen_shit"
@@ -48,7 +51,6 @@
     }
   },
   "dependencies": {
-    "chokidar": "^2.0.4",
     "electron-compile": "^6.4.3",
     "electron-devtools-installer": "^2.1.0",
     "electron-json-storage": "^4.1.4",
