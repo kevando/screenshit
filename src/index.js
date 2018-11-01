@@ -2,6 +2,7 @@ import { app, BrowserWindow, Menu, Tray, nativeImage, clipboard, ipcMain } from 
 import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
 import { enableLiveReload } from 'electron-compile';
 import storage from 'electron-json-storage';
+// const { exec, spawn } = require('child_process');
 
 import {
   iconPath,
@@ -10,10 +11,14 @@ import {
   activeTrayIcon
 } from './js/helpers';
 
+
 import {
-  createOnboardingWelcomeWindow,
-  createOnboardingConfigWindow,
-} from './js/windows';
+  createWelcomeWindow,
+} from './windows/Welcome';
+
+import {
+  createPromptWindow,
+} from './windows/Prompt';
 
 import {
   startScreenShotWatcher,
@@ -32,12 +37,11 @@ import {
 // electron stuff
 global.welcomeWindow = null;
 global.promptWindow = null;
+global.mainWindow = null;
 global.watcher = null;
 global.tray = null;
 
 // App variables that should probly go somewhere else as this list grows
-global.onboardingComplete = false;
-global.copyImageByDefault = true;
 global.activeScreenShotPath = null;
 global.desktopPath = app.getPath('desktop');
 
@@ -54,23 +58,15 @@ if (isDevMode) enableLiveReload({ strategy: 'react-hmr' });
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
 
-  // FIRST we show onboarding????
-  storage.get('onboarding', function(error, data) {
-    if (error) throw error;
-    if(data.completed) {
-      onboardingComplete = true;
-    } else {
-      createOnboardingWelcomeWindow();
-    }
-  });
-
-  // SECOND Create a new system tray icon
+  // 1.) Load the Tray
   tray = new Tray(activeTrayIcon);
   createTray();
 
-  // THIRD start the file watcher
+  // 2.) start the file watcher
   startScreenShotWatcher(desktopPath);
 
+  // 3.) Initialize UI based on settings
+  _initializeUI();
 });
 
 
@@ -90,31 +86,15 @@ app.on('window-all-closed', () => {
 // Communicate with Renderer
 // -----------------------------------------------------
 
-// USER CLICKED DONE IN ONBOARDING
-ipcMain.on('first-screen-shot-saved', (event, state) => {
-
-  // If user checked Copy Image, lets copy that image!
-  if(state.copyImage === true)
-    copyActiveScreenShot();
-
-  // Set this so user does not have to see it in the future
-  storage.set('onboarding', { completed: true });
-  onboardingComplete = true;
+// USER CLICKED COPY IMAGE
+ipcMain.on('copy-image', (event) => {
+  copyActiveScreenShot();
 
   // lets also send a response back to the onboarding window to close
-  event.sender.send('image-process-complete', 'success');
+  // event.sender.send('image-process-complete', 'success');
 });
 
-// USER CLICKED DONE IN PROMPT
-ipcMain.on('done-with-screen-shot', (event, state) => {
 
-  // If user checked Copy Image, lets copy that image!
-  if(state.copyImage === true)
-    copyActiveScreenShot();
-
-  // let window know that it can close
-  event.sender.send('image-process-complete', 'success')
-});
 
 
 // -----------------------------------------------------
@@ -123,6 +103,7 @@ ipcMain.on('done-with-screen-shot', (event, state) => {
 // -----------------------------------------------------
 
 function copyActiveScreenShot() {
+  console.log(activeScreenShotPath)
   if(activeScreenShotPath) {
     const screenshotImage = nativeImage.createFromPath(activeScreenShotPath);
     clipboard.writeImage(screenshotImage);
@@ -132,3 +113,16 @@ function copyActiveScreenShot() {
   }
 
 }
+
+function _initializeUI() {
+  app.dock.hide();
+}
+
+//   exec('defaults write com.apple.screencapture show-thumbnail -bool FALSE', function(error, stdout, stderr) {
+//     console.log('exec')
+//     console.log(error,stdout)
+//   // work with result
+// });
+
+
+  // exec('defaults write com.apple.screencapture show-thumbnail -bool FALSE');
