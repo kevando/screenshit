@@ -7,7 +7,7 @@
 
 ## How to install
 
-1. [Download the latest release](https://github.com/kevando/screenshit/releases/download/v1.0.1/screen-shit-darwin-x64-1.0.0.zip)
+1. [Download the latest release](https://github.com/kevando/screenshit/releases/download/v1.0.2/screen-shit-darwin-x64-1.0.2.zip)
 2. Unzip it (it's safe)
 
 ## How to use
