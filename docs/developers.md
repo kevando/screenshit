@@ -1,6 +1,4 @@
-# Developers
-
-## Running locally
+# Local
 
 I made this app using Electron, so you can run this locally if you want.
 
@@ -19,8 +17,6 @@ html/css/js is in `/src` and image assets are in `/app`
 
 ## References
 
-[Chokidar](https://ourcodeworld.com/articles/read/160/watch-files-and-directories-with-electron-framework) for watching file system.
-
 
 [Icon Converter](https://iconverticons.com/online) Export icns, export all png 
 
@@ -29,3 +25,17 @@ html/css/js is in `/src` and image assets are in `/app`
 https://codepen.io/kevando_/pen/YJOmmj
 
 http://lesscss.org/#mixins
+
+# Distribution
+
+```
+electron-forge make
+```
+
+Look in `out/make/screen-shit-darwin-x64` for .app file
+
+# History
+
+[`2018-11-13`](https://github.com/kevando/screenshit/releases/tag/v1.0.2) **1.0.2**   
+[`2018-10-29`](https://github.com/kevando/screenshit/releases/tag/v1.0.1) **1.0.1**   
+[`2018-10-19`](https://github.com/kevando/screenshit/releases/tag/v1.0.1) **1.0.0**   

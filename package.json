@@ -1,7 +1,7 @@
 {
   "name": "screen-shit",
   "productName": "screen-shit",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Do more with screen shots",
   "main": "src/index.js",
   "scripts": {
@@ -11,7 +11,10 @@
     "publish": "electron-forge publish",
     "lint": "eslint --cache --color --ext .jsx,.js src"
   },
-  "keywords": ["screenshot", "screen shot"],
+  "keywords": [
+    "screenshot",
+    "screen shot"
+  ],
   "author": "kevando",
   "license": "MIT",
   "config": {
@@ -54,6 +57,7 @@
     "electron-compile": "^6.4.3",
     "electron-devtools-installer": "^2.1.0",
     "electron-json-storage": "^4.1.4",
+    "electron-settings": "^3.2.0",
     "electron-squirrel-startup": "^1.0.0",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",

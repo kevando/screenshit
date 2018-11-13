@@ -6,9 +6,11 @@ class Container extends React.Component {
   render() {
 
     return (
+
       <div className='window'>
         {this.props.children}
       </div>
+    
   );
 
   }
