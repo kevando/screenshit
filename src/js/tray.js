@@ -1,5 +1,3 @@
-
-
 import { app, Menu, Tray, MenuItem } from 'electron';
 import storage  from 'electron-json-storage';
 const settings = require('electron-settings');
