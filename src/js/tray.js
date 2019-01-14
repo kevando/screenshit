@@ -22,8 +22,6 @@ export function createTray() {
   tray.setToolTip('ScreenShit')
   tray.setContextMenu(contextMenu)
 
-  // console.log(os.platform())
-
 
   contextMenu.append(new MenuItem(
     { label: 'Disable Mojave Screen Shot Utility',

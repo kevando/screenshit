@@ -1,7 +1,7 @@
 {
   "name": "screen-shit",
   "productName": "screen-shit",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Do more with screen shots",
   "main": "src/index.js",
   "scripts": {

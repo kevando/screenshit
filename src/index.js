@@ -2,12 +2,10 @@ import { app, BrowserWindow, Menu, Tray, nativeImage, clipboard, ipcMain } from 
 import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
 import { enableLiveReload } from 'electron-compile';
 import storage from 'electron-json-storage';
-// const { exec, spawn } = require('child_process');
+const { exec, spawn } = require('child_process');
 var fs = require('fs');
 
 import {
-  iconPath,
-  regularTrayIcon,
   isDevMode,
   activeTrayIcon
 } from './js/helpers';
@@ -17,14 +15,8 @@ import {
   createWelcomeWindow,
 } from './windows/Welcome';
 
-// import {
-//   createPromptWindow,
-// } from './windows/Prompt';
-
-
 import {
   createTray,
-  changeTrayImage
 } from './js/tray';
 
 
@@ -75,14 +67,16 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
+
+// -----------------------------------------------------
+app.on('before-quit', () => {
+  // enable this because electron-settings isnt working good atm
+  // wont pull right setting onload
+  exec('defaults write com.apple.screencapture show-thumbnail -bool TRUE');
+  console.log('done')
+});
+
 // ==============================================================
-
-
-// -----------------------------------------------------
-// Handle Screen shot.
-// I expect this function to grow into the core application code
-// -----------------------------------------------------
-
 function copyActiveScreenShot() {
   // console.log(activeScreenShotPath)
   if(activeScreenShotPath) {
