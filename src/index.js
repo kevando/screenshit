@@ -3,6 +3,7 @@ import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-insta
 import { enableLiveReload } from 'electron-compile';
 import storage from 'electron-json-storage';
 // const { exec, spawn } = require('child_process');
+var fs = require('fs');
 
 import {
   iconPath,
@@ -16,13 +17,10 @@ import {
   createWelcomeWindow,
 } from './windows/Welcome';
 
-import {
-  createPromptWindow,
-} from './windows/Prompt';
+// import {
+//   createPromptWindow,
+// } from './windows/Prompt';
 
-import {
-  startScreenShotWatcher,
-} from './js/watcher';
 
 import {
   createTray,
@@ -52,21 +50,20 @@ if (isDevMode) enableLiveReload({ strategy: 'react-hmr' });
 
 // ==============================================================
 // MAIN FUNCTION
-
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
 
-  // 1.) Load the Tray
+  // Load the Tray
   tray = new Tray(activeTrayIcon);
   createTray();
 
-  // 2.) start the file watcher
+  // Start the file watcher
   startScreenShotWatcher(desktopPath);
 
-  // 3.) Initialize UI based on settings
-  _initializeUI();
+  // Welcome new users
+
 });
 
 
@@ -81,38 +78,36 @@ app.on('window-all-closed', () => {
 // ==============================================================
 
 
-
-// -----------------------------------------------------
-// Communicate with Renderer
-// -----------------------------------------------------
-
-// USER CLICKED COPY IMAGE
-ipcMain.on('copy-image', (event) => {
-  copyActiveScreenShot();
-
-  // lets also send a response back to the onboarding window to close
-  // event.sender.send('image-process-complete', 'success');
-});
-
-
-
-
 // -----------------------------------------------------
 // Handle Screen shot.
 // I expect this function to grow into the core application code
 // -----------------------------------------------------
 
 function copyActiveScreenShot() {
-  console.log(activeScreenShotPath)
+  // console.log(activeScreenShotPath)
   if(activeScreenShotPath) {
     const screenshotImage = nativeImage.createFromPath(activeScreenShotPath);
     clipboard.writeImage(screenshotImage);
     activeScreenShotPath = null;
-  } else {
-    console.log('NO activeScreenShotPath');
   }
+}
+
+// ==============================================================
+
+function startScreenShotWatcher(path) {
+  fs.watch(path,  (eventType, filename) => {
+  if (filename && eventType === 'rename') {
+    if(filename.substring(0,11) === "Screen Shot") {
+      // We found a new file and yes it's a SCREEN SHOT!
+      activeScreenShotPath = path + '/' + filename;
+        copyActiveScreenShot();
+    }
+  }
+});
 
 }
+
+// ==============================================================
 
 function _initializeUI() {
   app.dock.hide();
