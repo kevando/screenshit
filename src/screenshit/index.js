@@ -1,6 +1,6 @@
 
 const path = require('path')
-const { ipcMain, app, Menu, MenuItem, Tray, dialog, nativeImage, clipboard, } = require('electron')
+const { ipcMain, app, Menu, MenuItem, Tray, dialog, nativeImage, clipboard, BrowserWindow } = require('electron')
 
 const settings = require('electron-settings');
 
@@ -10,53 +10,32 @@ const { exec, spawn } = require('child_process');
 
 
 let appIcon = null
+let watcher = null
 
 
-// ipcMain.on('remove-tray', () => {
-// 	appIcon.destroy()
-// })
+app.on('before-quit', () => {
+	// enable this because electron-settings isnt working good atm
+	// wont pull right setting onload
+	// exec('defaults write com.apple.screencapture show-thumbnail -bool TRUE');
+	// console.log('done')
+});
 
 app.on('window-all-closed', () => {
-	if (appIcon) appIcon.destroy()
+	// the user closed the welcome window and is ready to go
 })
 
 
-// screenshit
-app.on('ready', async () => {
+// Settings
+// ===============================================
 
-	try {
-
-		console.log('1. Settings')
-		await getSettings()
-
-		console.log('2. Create Tray')
-		await createTray()
-
-		console.log('3. Start Watching')
-		startWatching()
-
-	} catch (error) {
-		console.log(error)
-	}
-})
-
-async function getSettings() {
-
+async function initSettings() {
 	if (!settings.has('path')) {
-		// Force it to be desktop
 		const path = app.getPath('desktop')
 		setPath(path)
 	}
-
-	if (!settings.has('mojave')) {
-		// Force it to be enabled
-		setMojave('TRUE')
-	}
-
-	if (!settings.has('openOnStart')) {
-		setOpenOnStart(true)
-	}
-
+	if (!settings.has('mojave')) { setMojave('TRUE') }
+	if (!settings.has('openOnStart')) { setOpenOnStart(true) }
+	if (!settings.has('prompt')) { togglePrompt() }
 	return
 }
 
@@ -65,6 +44,10 @@ function setPath(path) {
 	settings.set('path', path)
 	if (appIcon) appIcon.destroy()
 	createTray()
+
+	// also reboot the watcher
+	if (watcher) watcher.close()
+	startWatching()
 }
 
 function setMojave(bool) {
@@ -78,10 +61,16 @@ function setOpenOnStart(bool) {
 	})
 	settings.set('openOnStart', bool)
 }
+function togglePrompt() {
+	const bool = settings.get('prompt')
+	settings.set('prompt', !bool)
+}
 
-// Create Tray
+// Tray
+// ===============================================
+
 async function createTray() {
-	console.log('createTray', settings.get('mojave'))
+	// console.log('createTray', settings.get('mojave'))
 	const iconName = process.platform === 'win32' ? 'windows-icon.png' : 'iconTemplate.png'
 	const iconPath = path.join(__dirname, iconName)
 	appIcon = new Tray(iconPath)
@@ -89,18 +78,20 @@ async function createTray() {
 	const contextMenu = Menu.buildFromTemplate([
 
 		{
-			label: 'Quit', click: function () {
-				app.quit();
-			}
+			label: 'Quit',
+			click: () => { app.quit() }
+		},
+		{
+			label: 'Show Prompt',
+			checked: settings.get('prompt'),
+			type: 'checkbox',
+			click: () => { togglePrompt() }
 		},
 
 
 	])
-
 	appIcon.setToolTip('Settings')
 	appIcon.setContextMenu(contextMenu)
-
-
 	contextMenu.append(new MenuItem(
 		{
 			label: settings.get('path'),
@@ -110,7 +101,6 @@ async function createTray() {
 			}
 		},
 	));
-
 	contextMenu.append(new MenuItem(
 		{
 			label: 'Disable Mojave Screen Shot Utility',
@@ -141,15 +131,17 @@ async function createTray() {
 			}
 		},
 	));
-
-
 	appIcon.setContextMenu(contextMenu);
 }
 
 
 function choosePath() {
-	dialog.showOpenDialog({
-		properties: ['openDirectory']
+	// console.log('choosey')
+	dialog.showOpenDialog(BrowserWindow, {
+		title: 'Choose where to save screen shots',
+		message: 'some',
+		properties: ['openDirectory'],
+		buttonLabel: 'Choose'
 	}, (directory) => {
 		if (directory && directory[0]) {
 			setPath(directory[0])
@@ -157,17 +149,58 @@ function choosePath() {
 	})
 }
 
+// Screenshots
+// ===============================================
+
+function handleScreenshot(image) {
+	if (settings.get('prompt')) {
+		showPrompt(image)
+	} else {
+		
+		// give tray some flair right after a screen shot
+		appIcon.setHighlightMode('always')
+		setTimeout(() => {
+			copyActiveScreenShot(image)
+			appIcon.setHighlightMode('selection')
+		}, 500)
+	}
+}
+
+function showPrompt(image) {
+
+	const options = {
+		type: 'warning',
+		cancelId: 0,
+		defaultId: 1,
+		buttons: ['No, Close', 'Yes, Copy to Clipboard'],
+		title: 'Question',
+		message: 'Do you want to copy this image?',
+		// detail: 'It does not really matter',
+		// checkboxLabel: 'Remember my answer',
+		// checkboxChecked: true,
+	};
+
+	dialog.showMessageBox(null, options, (response, checkboxChecked) => {
+		// console.log(response);
+		// console.log(checkboxChecked);
+		if (response === 1) {
+			// console.log('go copy')
+			copyActiveScreenShot(image)
+		} else {
+			// console.log('do nothing')
+		}
+	});
+}
 
 function copyActiveScreenShot(activeScreenShotPath) {
 	// console.log(activeScreenShotPath)
 	if (activeScreenShotPath) {
 		const screenshotImage = nativeImage.createFromPath(activeScreenShotPath);
-		//   clipboard.writeImage(screenshotImage);
-		console.warn(activeScreenShotPath)
+		clipboard.writeImage(screenshotImage);
+		// console.warn(activeScreenShotPath)
 	}
 }
 
-// ==============================================================
 
 function startWatching() {
 	const path = settings.get('path')
@@ -175,10 +208,24 @@ function startWatching() {
 		if (filename && eventType === 'rename') {
 			if (filename.substring(0, 11) === "Screen Shot") {
 				// We found a new file and yes it's a SCREEN SHOT!
-				activeScreenShotPath = path + '/' + filename;
-				copyActiveScreenShot(activeScreenShotPath);
+				const activeScreenShotPath = path + '/' + filename;
+				handleScreenshot(activeScreenShotPath)
 			}
 		}
 	});
 
 }
+
+
+// Main Function!!
+// ===============================================
+
+app.on('ready', async () => {
+	try {
+		await initSettings()
+		await createTray()
+		startWatching()
+	} catch (error) {
+		console.log(error)
+	}
+})

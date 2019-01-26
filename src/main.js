@@ -25,8 +25,8 @@ function initialize () {
 
   function createWindow () {
     const windowOptions = {
-      width: 1080,
-      minWidth: 680,
+      width: 800,
+      // minWidth: 680,
       height: 440,
       title: app.getName()
     }
@@ -52,6 +52,10 @@ function initialize () {
 
   app.on('ready', () => {
     createWindow()
+
+    // do not show application in doc or tab
+    app.dock.hide();
+
   })
 
   app.on('window-all-closed', () => {
