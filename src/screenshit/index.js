@@ -11,7 +11,16 @@ const { exec, spawn } = require('child_process');
 
 let appIcon = null
 let watcher = null
+let mainWindow = null
 
+
+app.on('ready', () => {
+    createWindow()
+
+    // do not show application in doc or tab
+    app.dock.hide();
+
+  })
 
 app.on('before-quit', () => {
 	// enable this because electron-settings isnt working good atm
@@ -24,6 +33,32 @@ app.on('window-all-closed', () => {
 	// the user closed the welcome window and is ready to go
 })
 
+
+// Window!
+// ===============================================
+
+function createWindow() {
+	const windowOptions = {
+		width: 800,
+		// minWidth: 680,
+		height: 440,
+		title: app.getName()
+	}
+
+	mainWindow = new BrowserWindow(windowOptions)
+	mainWindow.loadURL(path.join('file://', __dirname, '../welcome.html'))
+
+	// Launch fullscreen with DevTools open, usage: npm run debug
+	// if (debug) {
+	//   mainWindow.webContents.openDevTools()
+	//   mainWindow.maximize()
+	//   require('devtron').install()
+	// }
+
+	mainWindow.on('closed', () => {
+		mainWindow = null
+	})
+}
 
 // Settings
 // ===============================================
@@ -70,7 +105,6 @@ function togglePrompt() {
 // ===============================================
 
 async function createTray() {
-	// console.log('createTray', settings.get('mojave'))
 	const iconName = process.platform === 'win32' ? 'windows-icon.png' : 'iconTemplate.png'
 	const iconPath = path.join(__dirname, iconName)
 	appIcon = new Tray(iconPath)
@@ -78,30 +112,18 @@ async function createTray() {
 	const contextMenu = Menu.buildFromTemplate([
 
 		{
-			label: 'Quit',
-			click: () => { app.quit() }
+			label: 'screenshit settings',
+			sublabel: 'sub',
+			enabled: false,
 		},
 		{
-			label: 'Show Prompt',
-			checked: settings.get('prompt'),
-			type: 'checkbox',
-			click: () => { togglePrompt() }
+			label: 'Welcome',
+			click: () => createWindow()
 		},
-
-
-	])
-	appIcon.setToolTip('Settings')
-	appIcon.setContextMenu(contextMenu)
-	contextMenu.append(new MenuItem(
 		{
-			label: settings.get('path'),
-			click: function () {
-				choosePath()
+			type: 'separator',
 
-			}
 		},
-	));
-	contextMenu.append(new MenuItem(
 		{
 			label: 'Disable Mojave Screen Shot Utility',
 			checked: settings.get('mojave') === 'FALSE',
@@ -116,9 +138,13 @@ async function createTray() {
 
 			}
 		},
-	));
+		{
+			label: 'Prompt Me before copying image',
+			checked: settings.get('prompt'),
+			type: 'checkbox',
+			click: () => { togglePrompt() }
+		},
 
-	contextMenu.append(new MenuItem(
 		{
 			label: 'Open on start up',
 			checked: settings.get('openOnStart'),
@@ -130,14 +156,40 @@ async function createTray() {
 
 			}
 		},
-	));
-	appIcon.setContextMenu(contextMenu);
+
+		{
+			type: 'separator',
+
+		},
+		{
+			label: 'Directory where screen shots save',
+			enabled: false,
+		},
+
+
+		{
+			label: settings.get('path'),
+			click: () => {choosePath()}
+		},
+
+		{ type: 'separator'},
+		{
+			label: 'Quit',
+			click: () => { app.quit() }
+		},
+
+
+
+	])
+	appIcon.setToolTip('Settings')
+	appIcon.setContextMenu(contextMenu)
+
 }
 
 
 function choosePath() {
 	// console.log('choosey')
-	dialog.showOpenDialog(BrowserWindow, {
+	dialog.showOpenDialog(null, {
 		title: 'Choose where to save screen shots',
 		message: 'some',
 		properties: ['openDirectory'],
@@ -156,7 +208,7 @@ function handleScreenshot(image) {
 	if (settings.get('prompt')) {
 		showPrompt(image)
 	} else {
-		
+
 		// give tray some flair right after a screen shot
 		appIcon.setHighlightMode('always')
 		setTimeout(() => {

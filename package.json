@@ -21,7 +21,7 @@
     "release": "node ./script/release.js",
     "prepack": "check-for-leaks",
     "prepush": "check-for-leaks",
-    "package-mac": "electron-packager . --overwrite builds --platform=darwin --arch=x64 --icon=assets/icons/mac/icon.icns --prune=true --out=release-builds"
+    "make": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=app/icon/icon.icns --prune=true --out=out"
   },
   "repository": "https://github.com/kevando/screenshit",
   "keywords": [
