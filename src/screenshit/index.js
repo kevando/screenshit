@@ -63,7 +63,7 @@ async function getSettings() {
 function setPath(path) {
 	exec(`defaults write com.apple.screencapture location ${path}`)
 	settings.set('path', path)
-	appIcon.destroy()
+	if (appIcon) appIcon.destroy()
 	createTray()
 }
 

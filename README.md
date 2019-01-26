@@ -52,6 +52,10 @@ electron-forge make
 
 Look in `out/make/screen-shit-darwin-x64` for .app file
 
+
+https://electronjs.org/docs/tutorial/application-distribution
+
+
 ### History
 
 [`1.0.3`](https://github.com/kevando/screenshit/releases/tag/v1.0.2) - Mostly for hoffman. Hoping he gives good feedback.  
