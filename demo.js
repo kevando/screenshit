@@ -9,9 +9,6 @@ const path = require('path')
 const glob = require('glob')
 const {app, BrowserWindow} = require('electron')
 
-// screenshit
-require('./main-process/screenshit')
-
 const debug = /--debug/.test(process.argv[2])
 
 if (process.mas) app.setName('Electron APIs')
@@ -21,13 +18,13 @@ let mainWindow = null
 function initialize () {
   makeSingleInstance()
 
-  // loadDemos()
+  loadDemos()
 
   function createWindow () {
     const windowOptions = {
       width: 1080,
       minWidth: 680,
-      height: 440,
+      height: 840,
       title: app.getName()
     }
 
@@ -36,7 +33,7 @@ function initialize () {
     }
 
     mainWindow = new BrowserWindow(windowOptions)
-    mainWindow.loadURL(path.join('file://', __dirname, '/welcome.html'))
+    mainWindow.loadURL(path.join('file://', __dirname, '/index.html'))
 
     // Launch fullscreen with DevTools open, usage: npm run debug
     if (debug) {
@@ -88,10 +85,9 @@ function makeSingleInstance () {
 }
 
 // Require each JS file in the main-process dir
-// function loadDemos () {
-//   const files = glob.sync(path.join(__dirname, 'main-process/**/*.js'))
-//   files.forEach((file) => { require(file) })
-// }
-
+function loadDemos () {
+  const files = glob.sync(path.join(__dirname, 'main-process/**/*.js'))
+  files.forEach((file) => { require(file) })
+}
 
 initialize()

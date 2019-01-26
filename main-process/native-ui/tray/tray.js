@@ -1,6 +1,8 @@
 const path = require('path')
 const {ipcMain, app, Menu, Tray} = require('electron')
 
+const settings = require('electron-settings');
+
 let appIcon = null
 
 ipcMain.on('put-in-tray', (event) => {
@@ -26,3 +28,4 @@ ipcMain.on('remove-tray', () => {
 app.on('window-all-closed', () => {
   if (appIcon) appIcon.destroy()
 })
+

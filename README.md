@@ -1,8 +1,81 @@
-# <img src="https://cloud.githubusercontent.com/assets/378023/15172388/b2b81950-1790-11e6-9a7c-ccc39912bb3a.png" width="60px" align="center" alt="Electron API Demos icon"> Electron API Demos
+# <img src="https://cloud.githubusercontent.com/assets/378023/15172388/b2b81950-1790-11e6-9a7c-ccc39912bb3a.png" width="60px" align="center" alt="Electron API Demos icon"> screenshit
 
 [![Build Status](https://travis-ci.org/electron/electron-api-demos.svg?branch=master)](https://travis-ci.org/electron/electron-api-demos)
 [![JavaScript Standard Style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](http://standardjs.com)
 
+
+## Development
+
+Run app local
+
+```
+yarn dev
+
+
+```
+
+Run the pure  demo app. change package.json line to `  "main": "demo.js",`
+
+
+```
+yarn dev
+
+
+```
+
+
+
+
+
+
+![Logo](app/icon/64x64.png) 
+
+
+
+
+
+
+#### Development
+
+
+```
+git clone https://github.com/kevando/screenshit.git
+npm install
+electron-forge start  
+```
+
+#### Distribution
+
+```
+electron-forge make
+```
+
+Look in `out/make/screen-shit-darwin-x64` for .app file
+
+### History
+
+[`1.0.3`](https://github.com/kevando/screenshit/releases/tag/v1.0.2) - Mostly for hoffman. Hoping he gives good feedback.  
+[`1.0.2`](https://github.com/kevando/screenshit/releases/tag/v1.0.2)   
+[`1.0.1`](https://github.com/kevando/screenshit/releases/tag/v1.0.1)    
+[`1.0.0`](https://github.com/kevando/screenshit/releases/tag/v1.0.1)   
+
+
+
+### Why?
+
+> I made this app because I take lots of screenshots and want a better way to manage it. ScreenShit runs in the background and monitors for new screen shots. When a new screen shot is detected, ScreenShit prompts you with options for handling the screen shot.  I understand apple includes a features like this in the new osx. I've yet to upgrade my OS.
+
+[Inspired by mac2imgur](https://github.com/mileswd/mac2imgur)
+
+
+
+
+
+---
+---
+---
+---
+---
 This is a desktop app that interactively and with sample code demonstrates core features of the [Electron](http://electronjs.org) API. It's built with Electron, too, of course. This app works on Windows, macOS and Linux operating systems.
 
 Use this app to see what you can do with Electron and use the source code to learn how to create a basic Electron app.
