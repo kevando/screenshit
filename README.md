@@ -5,7 +5,7 @@
 Harness the power of your clipboard by using screenshit to copy the screen shot image to the clipboard. Then you can simply `ctrl` + `v` to paste the image into Messages, Slack, whatever you want. 
 
 
-### [Download the installer](latest)
+### [Download the installer](latest_dmg)
 
 
 ## ![Logo](app/icon/64x64.png)
@@ -65,5 +65,5 @@ https://twitter.com/kevando_/status/1089357604176838656
 ![Logo](app/icon/16x16.png) 
 ![Logo](app/icon/16x16.png) 
 
-[latest]: https://github.com/kevando/screenshit/releases/download/v1.1/screenshit.dmg
+[latest_dmg]: https://github.com/kevando/screenshit/releases/download/v1.1/screenshit.dmg
 
