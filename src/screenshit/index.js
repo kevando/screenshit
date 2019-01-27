@@ -167,7 +167,7 @@ async function createTray() {
 
 		},
 		{
-			label: 'Directory where screen shots save',
+			label: 'The dialog box to change  the directory may get lost behind other windows.',
 			enabled: false,
 		},
 
@@ -231,7 +231,7 @@ function handleScreenshot(image) {
 			const iconName = 'icon-tray-idle-paperclip.png'
 			const iconPath = path.join(__dirname, iconName)
 			appIcon.setImage(iconPath)
-		}, 4500)
+		}, 1000)
 	}
 }
 
@@ -241,7 +241,7 @@ function showPrompt(image) {
 		type: 'warning',
 		cancelId: 0,
 		defaultId: 1,
-		buttons: ['No, Close', 'Yes, Copy to Clipboard'],
+		buttons: ['No, go away', 'Yes, copy to clipboard'],
 		title: 'Question',
 		message: 'Do you want to copy this image?',
 		// detail: 'It does not really matter',
