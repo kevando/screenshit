@@ -33,6 +33,7 @@ function initialize () {
   // })
 
   app.on('window-all-closed', () => {
+    app.dock.hide();
     if (process.platform !== 'darwin') {
       app.quit()
     }

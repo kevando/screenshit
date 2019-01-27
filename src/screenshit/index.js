@@ -18,7 +18,7 @@ app.on('ready', () => {
     createWindow()
 
     // do not show application in doc or tab
-    app.dock.hide();
+    // app.dock.hide();
 
   })
 
@@ -67,6 +67,11 @@ async function initSettings() {
 	if (!settings.has('path')) {
 		const path = app.getPath('desktop')
 		setPath(path)
+	}  else  {
+		// if the path is in settings, always set it again to avoid any problem
+		// Makes this app far worse than bad
+		const path = settings.get('path')
+		setPath(path)
 	}
 	if (!settings.has('mojave')) { setMojave('TRUE') }
 	if (!settings.has('openOnStart')) { setOpenOnStart(true) }
@@ -77,12 +82,6 @@ async function initSettings() {
 function setPath(path) {
 	exec(`defaults write com.apple.screencapture location ${path}`)
 	settings.set('path', path)
-	if (appIcon) appIcon.destroy()
-	createTray()
-
-	// also reboot the watcher
-	if (watcher) watcher.close()
-	startWatching()
 }
 
 function setMojave(bool) {
@@ -105,7 +104,13 @@ function togglePrompt() {
 // ===============================================
 
 async function createTray() {
-	const iconName = process.platform === 'win32' ? 'windows-icon.png' : 'iconTemplate.png'
+
+	//  check on the tray before doing anything
+	if (appIcon) appIcon.destroy()
+	// ^ bad pattern. find better way
+
+
+	const iconName = 'icon-tray-idle-paperclip.png'
 	const iconPath = path.join(__dirname, iconName)
 	appIcon = new Tray(iconPath)
 
@@ -197,6 +202,14 @@ function choosePath() {
 	}, (directory) => {
 		if (directory && directory[0]) {
 			setPath(directory[0])
+
+			// also reboot file watcher here
+			if (watcher) watcher.close()
+			startWatching()
+
+			// also restart tray to reflect new data
+			createTray()
+			// probly a better place for this
 		}
 	})
 }
@@ -210,11 +223,15 @@ function handleScreenshot(image) {
 	} else {
 
 		// give tray some flair right after a screen shot
-		appIcon.setHighlightMode('always')
+		const iconName = 'icon-tray-active-coolguy.png'
+		const iconPath = path.join(__dirname, iconName)
+		appIcon.setImage(iconPath)
 		setTimeout(() => {
 			copyActiveScreenShot(image)
-			appIcon.setHighlightMode('selection')
-		}, 500)
+			const iconName = 'icon-tray-idle-paperclip.png'
+			const iconPath = path.join(__dirname, iconName)
+			appIcon.setImage(iconPath)
+		}, 4500)
 	}
 }
 
@@ -255,11 +272,13 @@ function copyActiveScreenShot(activeScreenShotPath) {
 
 
 function startWatching() {
+	// console.log('start watcuibng')
 	const path = settings.get('path')
 	fs.watch(path, (eventType, filename) => {
 		if (filename && eventType === 'rename') {
 			if (filename.substring(0, 11) === "Screen Shot") {
 				// We found a new file and yes it's a SCREEN SHOT!
+				// console.log('Found: ' + path+filename)
 				const activeScreenShotPath = path + '/' + filename;
 				handleScreenshot(activeScreenShotPath)
 			}
