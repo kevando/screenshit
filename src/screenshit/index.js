@@ -11,7 +11,16 @@ const { exec, spawn } = require('child_process');
 
 let appIcon = null
 let watcher = null
+let mainWindow = null
 
+
+app.on('ready', () => {
+    createWindow()
+
+    // do not show application in doc or tab
+    // app.dock.hide();
+
+  })
 
 app.on('before-quit', () => {
 	// enable this because electron-settings isnt working good atm
@@ -25,12 +34,43 @@ app.on('window-all-closed', () => {
 })
 
 
+// Window!
+// ===============================================
+
+function createWindow() {
+	const windowOptions = {
+		width: 800,
+		// minWidth: 680,
+		height: 440,
+		title: app.getName()
+	}
+
+	mainWindow = new BrowserWindow(windowOptions)
+	mainWindow.loadURL(path.join('file://', __dirname, '../welcome.html'))
+
+	// Launch fullscreen with DevTools open, usage: npm run debug
+	// if (debug) {
+	//   mainWindow.webContents.openDevTools()
+	//   mainWindow.maximize()
+	//   require('devtron').install()
+	// }
+
+	mainWindow.on('closed', () => {
+		mainWindow = null
+	})
+}
+
 // Settings
 // ===============================================
 
 async function initSettings() {
 	if (!settings.has('path')) {
 		const path = app.getPath('desktop')
+		setPath(path)
+	}  else  {
+		// if the path is in settings, always set it again to avoid any problem
+		// Makes this app far worse than bad
+		const path = settings.get('path')
 		setPath(path)
 	}
 	if (!settings.has('mojave')) { setMojave('TRUE') }
@@ -42,12 +82,6 @@ async function initSettings() {
 function setPath(path) {
 	exec(`defaults write com.apple.screencapture location ${path}`)
 	settings.set('path', path)
-	if (appIcon) appIcon.destroy()
-	createTray()
-
-	// also reboot the watcher
-	if (watcher) watcher.close()
-	startWatching()
 }
 
 function setMojave(bool) {
@@ -70,38 +104,31 @@ function togglePrompt() {
 // ===============================================
 
 async function createTray() {
-	// console.log('createTray', settings.get('mojave'))
-	const iconName = process.platform === 'win32' ? 'windows-icon.png' : 'iconTemplate.png'
+
+	//  check on the tray before doing anything
+	if (appIcon) appIcon.destroy()
+	// ^ bad pattern. find better way
+
+
+	const iconName = 'icon-tray-idle-paperclip.png'
 	const iconPath = path.join(__dirname, iconName)
 	appIcon = new Tray(iconPath)
 
 	const contextMenu = Menu.buildFromTemplate([
 
 		{
-			label: 'Quit',
-			click: () => { app.quit() }
+			label: 'screenshit settings',
+			sublabel: 'sub',
+			enabled: false,
 		},
 		{
-			label: 'Show Prompt',
-			checked: settings.get('prompt'),
-			type: 'checkbox',
-			click: () => { togglePrompt() }
+			label: 'Welcome',
+			click: () => createWindow()
 		},
-
-
-	])
-	appIcon.setToolTip('Settings')
-	appIcon.setContextMenu(contextMenu)
-	contextMenu.append(new MenuItem(
 		{
-			label: settings.get('path'),
-			click: function () {
-				choosePath()
+			type: 'separator',
 
-			}
 		},
-	));
-	contextMenu.append(new MenuItem(
 		{
 			label: 'Disable Mojave Screen Shot Utility',
 			checked: settings.get('mojave') === 'FALSE',
@@ -116,9 +143,13 @@ async function createTray() {
 
 			}
 		},
-	));
+		{
+			label: 'Prompt Me before copying image',
+			checked: settings.get('prompt'),
+			type: 'checkbox',
+			click: () => { togglePrompt() }
+		},
 
-	contextMenu.append(new MenuItem(
 		{
 			label: 'Open on start up',
 			checked: settings.get('openOnStart'),
@@ -130,14 +161,40 @@ async function createTray() {
 
 			}
 		},
-	));
-	appIcon.setContextMenu(contextMenu);
+
+		{
+			type: 'separator',
+
+		},
+		{
+			label: 'The dialog box to change  the directory may get lost behind other windows.',
+			enabled: false,
+		},
+
+
+		{
+			label: settings.get('path'),
+			click: () => {choosePath()}
+		},
+
+		{ type: 'separator'},
+		{
+			label: 'Quit',
+			click: () => { app.quit() }
+		},
+
+
+
+	])
+	appIcon.setToolTip('Settings')
+	appIcon.setContextMenu(contextMenu)
+
 }
 
 
 function choosePath() {
 	// console.log('choosey')
-	dialog.showOpenDialog(BrowserWindow, {
+	dialog.showOpenDialog(null, {
 		title: 'Choose where to save screen shots',
 		message: 'some',
 		properties: ['openDirectory'],
@@ -145,6 +202,14 @@ function choosePath() {
 	}, (directory) => {
 		if (directory && directory[0]) {
 			setPath(directory[0])
+
+			// also reboot file watcher here
+			if (watcher) watcher.close()
+			startWatching()
+
+			// also restart tray to reflect new data
+			createTray()
+			// probly a better place for this
 		}
 	})
 }
@@ -156,13 +221,17 @@ function handleScreenshot(image) {
 	if (settings.get('prompt')) {
 		showPrompt(image)
 	} else {
-		
+
 		// give tray some flair right after a screen shot
-		appIcon.setHighlightMode('always')
+		const iconName = 'icon-tray-active-coolguy.png'
+		const iconPath = path.join(__dirname, iconName)
+		appIcon.setImage(iconPath)
 		setTimeout(() => {
 			copyActiveScreenShot(image)
-			appIcon.setHighlightMode('selection')
-		}, 500)
+			const iconName = 'icon-tray-idle-paperclip.png'
+			const iconPath = path.join(__dirname, iconName)
+			appIcon.setImage(iconPath)
+		}, 1000)
 	}
 }
 
@@ -172,7 +241,7 @@ function showPrompt(image) {
 		type: 'warning',
 		cancelId: 0,
 		defaultId: 1,
-		buttons: ['No, Close', 'Yes, Copy to Clipboard'],
+		buttons: ['No, go away', 'Yes, copy to clipboard'],
 		title: 'Question',
 		message: 'Do you want to copy this image?',
 		// detail: 'It does not really matter',
@@ -203,11 +272,13 @@ function copyActiveScreenShot(activeScreenShotPath) {
 
 
 function startWatching() {
+	// console.log('start watcuibng')
 	const path = settings.get('path')
 	fs.watch(path, (eventType, filename) => {
 		if (filename && eventType === 'rename') {
 			if (filename.substring(0, 11) === "Screen Shot") {
 				// We found a new file and yes it's a SCREEN SHOT!
+				// console.log('Found: ' + path+filename)
 				const activeScreenShotPath = path + '/' + filename;
 				handleScreenshot(activeScreenShotPath)
 			}

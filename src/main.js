@@ -23,42 +23,17 @@ function initialize () {
 
   // loadDemos()
 
-  function createWindow () {
-    const windowOptions = {
-      width: 800,
-      // minWidth: 680,
-      height: 440,
-      title: app.getName()
-    }
 
-    if (process.platform === 'linux') {
-      windowOptions.icon = path.join(__dirname, '/assets/app-icon/png/512.png')
-    }
+  // app.on('ready', () => {
+  //   createWindow()
 
-    mainWindow = new BrowserWindow(windowOptions)
-    mainWindow.loadURL(path.join('file://', __dirname, './welcome.html'))
+  //   // do not show application in doc or tab
+  //   app.dock.hide();
 
-    // Launch fullscreen with DevTools open, usage: npm run debug
-    if (debug) {
-      mainWindow.webContents.openDevTools()
-      mainWindow.maximize()
-      require('devtron').install()
-    }
-
-    mainWindow.on('closed', () => {
-      mainWindow = null
-    })
-  }
-
-  app.on('ready', () => {
-    createWindow()
-
-    // do not show application in doc or tab
-    app.dock.hide();
-
-  })
+  // })
 
   app.on('window-all-closed', () => {
+    app.dock.hide();
     if (process.platform !== 'darwin') {
       app.quit()
     }
@@ -66,7 +41,7 @@ function initialize () {
 
   app.on('activate', () => {
     if (mainWindow === null) {
-      createWindow()
+      createWindow(mainWindow)
     }
   })
 }

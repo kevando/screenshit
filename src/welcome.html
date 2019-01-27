@@ -16,7 +16,7 @@
     .title span {
       background: #AAA9AE;
       color: #1500B2;
-      padding: 0p  2px 1px 2px;
+      padding: 0px  2px 1px 2px;
       line-height: 1em;
     }
     p {
@@ -25,21 +25,27 @@
       line-height: 0.5em;
     }
   </style>
-  <title>kevando.github.io/screenshit</title>
+  <title>The 90s are coming back and no one can stop it.</title>
 </head>
 <body>
 
 	<div class='bsod'>
     <p class='title'><span>Welcome</span></p>
-    <p>&nbsp;This application will help you make faster use of your screenshots</p>
+    <p>&nbsp;This application helps you deal with screen shots. You can configure:</p>
     <br />
-    <p>&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp; Press CMD + SHIFT + 3 to take full screen screen shots</p>
-    <p>&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp; Press CMD + SHIFT + 4 to take partial screen screen shots</p>
     <p>&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp; Disable Mojave Screen Utility for faster action</p>
-    <p>&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp; Change the screen shot directory and clear up your desktop</p>
-    <p>&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp; Option to automatically copy to clipboard.</p>
+    <p>&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp; Copy screen shot image to clipboard without clicking a thing.</p>
+    <p>&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp; Change directory that saves screen shot files. (Good bye clutter!)</p>
+    <p>&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp; <span id="settings-path"></span></p>
+    <br />
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CMD + SHIFT + 3 takes a full screen screen shots</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CMD + SHIFT + 4 takes a partial screen screen shots</p>
 	</div>
       
+
+  <script type="text/javascript">
+    require('./renderer-process/screenshit')
+  </script>
 
 </body>
 </html>
