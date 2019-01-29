@@ -1,3 +1,32 @@
+# Local
+
+
+
+### Development
+
+You'll need [Node.js](https://nodejs.org) installed on your computer in order to build this app.
+
+```bash
+git clone git clone https://github.com/kevando/screenshit.git
+cd screnshiht
+yarn install
+yarn start
+# or
+yarn dev
+```
+
+### Distribution
+
+_TBD_
+
+
+
+## ![Logo](app/icon/32x32.png)
+
+
+
+```
+
 {
   "name": "screenshit",
   "productName": "Screen Shit",
@@ -34,9 +63,16 @@
   "scripts": {
     "start": "electron .",
     "dev": "electron . --debug",
+    "test": "mocha && standard",
+    "package": "npm-run-all package:*",
+    "package:mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --out=out --icon=assets/app-icon/mac/app.icns --osx-sign.identity='Developer ID Application: GitHub' --extend-info=assets/mac/info.plist",
+    "package:win": "electron-packager . --overwrite --platform=win32 --arch=ia32 --out=out --icon=assets/app-icon/win/app.ico",
+    "package:linux": "electron-packager . --overwrite --platform=linux --arch=x64 --out=out",
+    "package:sign-exe": "signcode './out/Electron API Demos-win32-ia32/Electron API Demos.exe' --cert ~/electron-api-demos.p12 --prompt --name 'Electron API Demos' --url 'http://electron.atom.io'",
     "package:installer": "node ./script/installer.js",
     "package:sign-installer": "signcode './out/windows-installer/ElectronAPIDemosSetup.exe' --cert ~/electron-api-demos.p12 --prompt --name 'Electron API Demos' --url 'http://electron.atom.io'",
     "xpackage:mas": "./script/mas.sh",
+    "windows-store": "node ./script/windows-store.js",
     "release": "node ./script/release.js",
     "prepack": "check-for-leaks",
     "prepush": "check-for-leaks",
@@ -48,8 +84,8 @@
     "screen shot",
     "coffee"
   ],
-
-
+  
+  
 
   "standard": {
     "env": {
@@ -93,3 +129,5 @@
     }
   }
 }
+
+```
