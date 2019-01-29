@@ -1,5 +1,11 @@
 
-function showPrompt(image) {
+
+const { ipcMain, app, Menu, MenuItem, Tray, dialog, nativeImage, clipboard, BrowserWindow } = require('electron')
+
+const settings = require('electron-settings');
+
+
+export function showPrompt(image, callback) {
 
 	const options = {
 		type: 'warning',
@@ -29,7 +35,7 @@ function showPrompt(image) {
 
 
 
-function choosePath() {
+export function choosePath() {
 	// console.log('choosey')
 	dialog.showOpenDialog(null, {
 		title: 'Choose where to save screen shots',

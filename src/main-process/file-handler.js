@@ -1,30 +1,28 @@
 
+const { ipcMain, app, Menu, MenuItem, Tray, dialog, nativeImage, clipboard, BrowserWindow } = require('electron')
+
+const settings = require('electron-settings');
+
+var fs = require('fs');
+const { showPrompt } = require('./dialogs')
 
 // Screenshots
 // ===============================================
 
 function handleScreenshot(image) {
 	if (settings.get('prompt')) {
-		showPrompt(image)
+		showPrompt(image,copyActiveScreenShot)
 	} else {
 
-		// give tray some flair right after a screen shot
-		const iconName = 'icon-tray-active-coolguy.png'
-		const iconPath = path.join(__dirname, iconName)
-		appIcon.setImage(iconPath)
-		setTimeout(() => {
-			copyActiveScreenShot(image)
-			const iconName = 'icon-tray-idle-paperclip.png'
-			const iconPath = path.join(__dirname, iconName)
-			appIcon.setImage(iconPath)
-		}, 1000)
+	  copyActiveScreenShot(image)
+		// maybe flair the icon here
 	}
 }
 
 
-function startWatching() {
+export function startWatcher() {
 	// console.log('start watcuibng')
-	const path = settings.get('path')
+	const path = settings.get('screenShotPath')
 	fs.watch(path, (eventType, filename) => {
 		if (filename && eventType === 'rename') {
 			if (filename.substring(0, 11) === "Screen Shot") {
