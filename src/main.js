@@ -1,43 +1,52 @@
-// only add update server if it's not being run from cli
-if (require.main !== module) {
-  require('update-electron-app')({
-    logger: require('electron-log')
-  })
-}
+
+const { app, BrowserWindow } = require('electron')
+
 
 const path = require('path')
-const glob = require('glob')
-const {app, BrowserWindow} = require('electron')
 
-// screenshit
-require('./screenshit')
 
-const debug = /--debug/.test(process.argv[2])
-
-if (process.mas) app.setName('Electron APIs')
+const {initialConfig} = require('./main-process/config')
+const {startWatcher} = require('./main-process/file-handler')
+const { createTray } = require('./main-process/tray')
 
 let mainWindow = null
 
-function initialize () {
-  makeSingleInstance()
+function initialize() {
+  makeSingleInstance(); // why?
 
-  // loadDemos()
+  function createWindow() {
+    const windowOptions = {
+      width: 800,
+      // minWidth: 680,
+      height: 440,
+      title: app.getName()
+    }
 
+    mainWindow = new BrowserWindow(windowOptions)
+    mainWindow.loadURL(path.join('file://', __dirname, './sections/welcome.html'))
+    mainWindow.on('closed', () => {
+      mainWindow = null
+    });
+  }
 
-  // app.on('ready', () => {
-  //   createWindow()
+  app.on('ready', async () => {
+    await initialConfig()
+    await startWatcher()
+    createWindow()
+    createTray()
+  })
 
-  //   // do not show application in doc or tab
-  //   app.dock.hide();
-
-  // })
+  app.on('before-quit', () => {
+    // Maybe we need this one day.
+  });
 
   app.on('window-all-closed', () => {
-    app.dock.hide();
-    if (process.platform !== 'darwin') {
-      app.quit()
-    }
-  })
+    // the user closed the welcome window and is ready to go!
+  });
+
+  app.on('window-all-closed', () => {
+    // could be fun
+  });
 
   app.on('activate', () => {
     if (mainWindow === null) {
@@ -53,24 +62,19 @@ function initialize () {
 //
 // Returns true if the current version of the app should quit instead of
 // launching.
-function makeSingleInstance () {
-  if (process.mas) return
+function makeSingleInstance() {
+
 
   app.requestSingleInstanceLock()
 
   app.on('second-instance', () => {
+    console.log('SECOND INSTANCE???????')
     if (mainWindow) {
       if (mainWindow.isMinimized()) mainWindow.restore()
       mainWindow.focus()
     }
   })
 }
-
-// Require each JS file in the main-process dir
-// function loadDemos () {
-//   const files = glob.sync(path.join(__dirname, 'main-process/**/*.js'))
-//   files.forEach((file) => { require(file) })
-// }
 
 
 initialize()

@@ -1,69 +1,57 @@
+# Screen Shit
 
-# Screenshit
+A desktop app for MacOS.
 
-
-Harness the power of your clipboard by using screenshit to copy the screen shot image to the clipboard. Then you can simply `ctrl` + `v` to paste the image into Messages, Slack, whatever you want. 
-
-
-### [Download the latest version]
-
-
-## ![Logo](app/icon/64x64.png)
-
-
-### Development
-
-You'll need [Node.js](https://nodejs.org) installed on your computer in order to build this app.
-
-```bash
-git clone git clone https://github.com/kevando/screenshit.git
-cd screnshiht
-yarn install
-yarn start
-# or
-yarn dev
-```
-
-### Distribution
-
-_TBD_
+- 📋 Easily copy screen shots to clipboard.
+- 🚮 Chage where you save screen shots
+- 🌄 Disable Mojave's new screen capture utility
 
 
 
-## ![Logo](app/icon/32x32.png)
+### Installation
 
 
-### Motivation
+[Download the latest version] (Mac only)
 
-I made this app because I take lots of screenshots and want a better way to manage it. ScreenShit runs in the background and monitors for new screen shots. When a new screen shot is detected, ScreenShit prompts you with options for handling the screen shot.  I understand apple includes a features like this in the new osx. I've yet to upgrade my OS.
-
-I also wanted to bring back some classic UI parts from early internet. Sunglasses emoji pays homage to minesweeper and the paper clip is a nod to Clippy  - jar jar binks of the Windows. 
-
-
-https://twitter.com/kevando_/status/1089357604176838656
+Drag the file into `~/Applications`
 
 
 
-## Releases
+## User Guide
 
-[`1.1.0`](https://github.com/kevando/screenshit/releases/tag/v1.1)   
-[`1.0.3`](https://github.com/kevando/screenshit/releases/tag/v1.0.2)  
-[`1.0.2`](https://github.com/kevando/screenshit/releases/tag/v1.0.2)   
-[`1.0.1`](https://github.com/kevando/screenshit/releases/tag/v1.0.1)    
-[`1.0.0`](https://github.com/kevando/screenshit/releases/tag/v1.0.1)   
+
+![Logo](./assets/app-icon/png/64x64.png)
+### Take screen shot
+
+The application uses the default screen capture utility that comes with OSX so can continue taking screen shots the same way.
+
+- Press <kbd>CMD ⌘</kbd> + <kbd>SHIFT ⇧</kbd> + <kbd>3</kbd> to take a full-screen screenshot
+
+- Press <kbd>CMD ⌘</kbd> + <kbd>SHIFT ⇧</kbd> + <kbd>4</kbd> to take a rectangular selection of the screen
+
+- Press <kbd>CMD ⌘</kbd> + <kbd>SHIFT ⇧</kbd> + <kbd>4</kbd> + <kbd>SPACE</kbd> to capture a specific window or menu
+
+### Copy & paste
+This can happen automatically or  you can choose to get prompted. Most modern web applications let you past image right into the form or textarea.
+
+
+
+## Motivation
+
+
+
+I take lots of screenshots. After my billionth screen shot, I noticed a pattern. It would be super helpful if I could copy the image to clipboard.
+
+I also wanted to bring back some classic UI parts from early internet. Sunglasses emoji pays homage to minesweeper and the paper clip is a nod to [Clippy](https://twitter.com/kevando_/status/1089357604176838656)  - jar jar binks of the Windows.
+
+
+### [Help](/docs/DEVELOPMENT.md)
 
 
 
 
-
-![Logo](app/icon/16x16.png) 
-![Logo](app/icon/16x16.png) 
-![Logo](app/icon/16x16.png) 
-![Logo](app/icon/16x16.png) 
-![Logo](app/icon/16x16.png) 
-![Logo](app/icon/16x16.png) 
-![Logo](app/icon/16x16.png) 
-![Logo](app/icon/16x16.png) 
+![Logo](./assets/app-icon/png/32x32.png)
+![Logo](./assets/app-icon/png/64x64.png)
+![Logo](./assets/app-icon/png/128x128.png)
 
 [Download the latest version]: https://github.com/kevando/screenshit/releases/download/v1.1/screenshit.dmg
-
