@@ -24,7 +24,7 @@ export function showPrompt(image, callback) {
 		// console.log(checkboxChecked);
 		if (response === 1) {
 			// console.log('go copy')
-			copyActiveScreenShot(image)
+			callback(image)
 		} else {
 			// console.log('do nothing')
 		}

@@ -1,15 +1,22 @@
-# Distribution
-
-First a quick over, then a deeper look at some of the more tricky parts.
-
-## A --> Z
 
 
-### Package code into an `.app` file
+![Logo](../assets/app-icon/png/64x64.png)
+
+
+### Overview
+
 
 
 ```
-electron-packager . --overwrite --platform=darwin --arch=x64 --out=out --icon=assets/app-icon/mac/app.icns --osx-sign.identity='Developer ID Application: Kevaid Inc. (E34JX9GA2A)'"
+# Step 1. 
+electron-packager . --overwrite --platform=darwin --arch=x64 --out=out --icon=assets/app-icon/mac/app.icns --osx-sign.identity='Developer ID Application: Kevaid Inc. (E34JX9GA2A)'
+
+# Step 2.
+codesign --deep --force --verbose --sign "Developer ID Application: Kevaid Inc. (E34JX9GA2A)" out/Screen\ Shit-darwin-x64/Screen\ Shit.app 
+
+# Step 3.
+electron-installer-dmg out/Screen\ Shit-darwin-x64/Screen\ Shit.app Screen\ Shit --icon=assets/app-icon/mac/app.icns
+
 ```
 
 I dont thihnk the osx-sign is needed
@@ -19,9 +26,7 @@ Require some major set up, not listed here. This works, but when users go to ins
 
 Bypassing the warning is easy (right click and open the app), but that solution not obvious.
 
-```
-codesign --deep --force --verbose --sign "Developer ID Application: Kevaid Inc. (E34JX9GA2A)" Application.app
-```
+
 [More info](https://pracucci.com/atom-electron-signing-mac-app.html)
 
 ## Create dmg
@@ -78,9 +83,3 @@ When I first tried signing the app, I got this error `resource fork, Finder info
 Turned out that issue was probably irrelevant. [Chokidar needs to be in dev dependancy](https://github.com/paulmillr/chokidar/issues/618)
 
 
-
-
-![Logo](/assets/app-icon/png/32x32.png)
-![Logo](/assets/app-icon/png/32x32.png)
-![Logo](/assets/app-icon/png/32x32.png)
-![Logo](/assets/app-icon/png/32x32.png)

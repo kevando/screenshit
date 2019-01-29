@@ -32,15 +32,16 @@ function setScreenShotPath(path) {
 	settings.set('screenShotPath', path)
 }
 
-function setMojave(bool) {
+export function setMojave(bool) {
 	exec(`defaults write com.apple.screencapture show-thumbnail -bool ${bool}`)
 	settings.set('mojave', bool)
 }
 
 
-function setPrompt(bool) {
-	settings.set('prompt', !bool)
+export function setPrompt(bool) {
+	settings.set('prompt', bool)
 }
+
 
 
 // function setOpenOnStart(bool) {

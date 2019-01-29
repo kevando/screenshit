@@ -6,6 +6,7 @@ const settings = require('electron-settings');
 let appIcon = null
 
 const { choosePath } = require('./dialogs')
+const { setMojave, setPrompt } = require('./config')
 
 // Tray
 // ===============================================
@@ -49,7 +50,10 @@ export function createTray() {
 			label: 'Prompt Me before copying image',
 			checked: settings.get('prompt'),
 			type: 'checkbox',
-			click: () => { togglePrompt() }
+			click: () => { 
+				const bool = settings.get('prompt')
+				setPrompt(!bool) 
+			}
 		},
 
 		// {
