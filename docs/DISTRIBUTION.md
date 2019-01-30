@@ -1,11 +1,6 @@
-
-
 ![Logo](../assets/app-icon/png/64x64.png)
 
-
 ### Overview
-
-
 
 ```
 # Step 1. 
@@ -15,11 +10,8 @@ electron-packager . --overwrite --platform=darwin --arch=x64 --out=out --icon=as
 codesign --deep --force --verbose --sign "Developer ID Application: Kevaid Inc. (E34JX9GA2A)" out/Screen\ Shit-darwin-x64/Screen\ Shit.app 
 
 # Step 3.
-electron-installer-dmg out/Screen\ Shit-darwin-x64/Screen\ Shit.app Screen\ Shit --icon=assets/app-icon/mac/app.icns
-
+electron-installer-dmg out/ Screen\ Shit --icon=assets/app-icon/png/64x64.png --out=out
 ```
-
-I dont thihnk the osx-sign is needed
 
 ## Sign it
 Require some major set up, not listed here. This works, but when users go to install it, Apple slams them a scary warning suggesting they would be foolish to trust me.
@@ -39,15 +31,12 @@ electron-installer-dmg out/Screen\ Shit-darwin-x64/Screen\ Shit.app Screen\ Shit
 
 # Releases
 
-[`1.1.0`](https://github.com/kevando/screenshit/releases/tag/v1.1)
-[`1.0.3`](https://github.com/kevando/screenshit/releases/tag/v1.0.2)
-[`1.0.2`](https://github.com/kevando/screenshit/releases/tag/v1.0.2)
-[`1.0.1`](https://github.com/kevando/screenshit/releases/tag/v1.0.1)
-[`1.0.0`](https://github.com/kevando/screenshit/releases/tag/v1.0.1)
-
-
-
-
+[`1.4.0`](https://github.com/kevando/screenshit/releases/tag/v1.1)  
+[`1.1.0`](https://github.com/kevando/screenshit/releases/tag/v1.1)  
+[`1.0.3`](https://github.com/kevando/screenshit/releases/tag/v1.0.2)  
+[`1.0.2`](https://github.com/kevando/screenshit/releases/tag/v1.0.2)  
+[`1.0.1`](https://github.com/kevando/screenshit/releases/tag/v1.0.1)  
+[`1.0.0`](https://github.com/kevando/screenshit/releases/tag/v1.0.1)  
 
 
 # How to sign your installer on MacOS

@@ -24,7 +24,9 @@
   "scripts": {
     "start": "electron .",
     "dev": "electron . --debug",
-    "prepack": "check-for-leaks"
+    "prepack": "check-for-leaks",
+    "packy" : "electron-packager . --overwrite --platform=darwin --arch=x64 --out=out --icon=assets/app-icon/mac/app.icns",
+    "signy" : "codesign --deep --force --verbose --sign 'Developer ID Application: Kevaid Inc. (E34JX9GA2A)' out/Screen Shit-darwin-x64/Screen Shit.app "
   },
   "repository": "https://github.com/kevando/screenshit",
   "keywords": [
