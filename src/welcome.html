@@ -1,18 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
-
   <link rel="stylesheet" href="./screen-shit.css">
-
-
-  <title>Welcome</title>
+  <title>Screen Shit</title>
 </head>
+
 <body>
 
-	<div class='bsod'>
-    <p class='title'><span>SCREEN SHIT</span></p>
-    <p>&nbsp;This application helps you deal with screen shots. You can configure:</p>
+  <div class='bsod'>
+    <p>&nbsp;This application helps you deal with screen shots.</p>
     <br />
     <p>&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp; Disable Mojave Screen Utility for faster action</p>
     <p>&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp; Copy screen shot image to clipboard without clicking a thing.</p>
@@ -22,11 +20,24 @@
     <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CMD + SHIFT + 3 takes a full screen screen shots</p>
     <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CMD + SHIFT + 4 takes a partial screen screen shots</p>
 
-	</div>
+  </div>
 
 
-	<script type="text/javascript">
-	require('./renderer-process/settings')
+  <script type="text/javascript">
+    // Renderer Process
+    const {ipcRenderer} = require('electron')
+    const  settings = require('electron-settings');
+
+    document.getElementById('settings-path').innerHTML = settings.get('screenShotPath')
+
+
+    ipcRenderer.on('settings-path', (event, arg) => {
+
+      const message = `Your screen shot path is: ${arg}`
+      document.getElementById('settings-path').innerHTML = message
+    })
+
   </script>
 </body>
+
 </html>
