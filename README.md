@@ -1,26 +1,21 @@
+![Logo](./assets/app-icon/png/128x128.png)
+
 # Screen Shit
 
-A desktop app for MacOS.
+ 📋 --- Easily copy screen shots to clipboard.  
+ 🚮 --- Chage where you save screen shots.  
+ 🌄 --- Disable Mojave's new screen capture utility.
 
-- 📋 Easily copy screen shots to clipboard.
-- 🚮 Chage where you save screen shots
-- 🌄 Disable Mojave's new screen capture utility
-
-
+--
 
 ### Installation
-
 
 [Download the latest version] (Mac only)
 
 Drag the file into `~/Applications`
 
-
-
 ## User Guide
 
-
-![Logo](./assets/app-icon/png/64x64.png)
 ### Take screen shot
 
 The application uses the default screen capture utility that comes with OSX so can continue taking screen shots the same way.
@@ -34,21 +29,15 @@ The application uses the default screen capture utility that comes with OSX so c
 ### Copy & paste
 This can happen automatically or  you can choose to get prompted. Most modern web applications let you past image right into the form or textarea.
 
+--
 
-
-## Motivation
-
-
+### Motivation
 
 I take lots of screenshots. After my billionth screen shot, I noticed a pattern. It would be super helpful if I could copy the image to clipboard.
 
 I also wanted to bring back some classic UI parts from early internet. Sunglasses emoji pays homage to minesweeper and the paper clip is a nod to [Clippy](https://twitter.com/kevando_/status/1089357604176838656)  - jar jar binks of the Windows.
 
-
-### [Help](/docs/DEVELOPMENT.md)
-
-
-
+#### [Devs](/docs/DEVELOPMENT.md)
 
 ![Logo](./assets/app-icon/png/32x32.png)
 ![Logo](./assets/app-icon/png/64x64.png)
