@@ -12,7 +12,7 @@ let watcher = null
 // 	Ready!
 // =====================================================
 
-export const ready = async () => {
+const ready = async () => {
   settings.set('version', version)
 
   // Defaults
@@ -235,3 +235,6 @@ const makeTray = option => {
   appIcon.setImage(cool)
   setTimeout(() => appIcon.setImage(idle), 10000)
 }
+
+
+module.exports = ready

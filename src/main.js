@@ -1,6 +1,6 @@
 const { app, BrowserWindow } = require('electron')
 const path = require('path')
-const { ready } = require('./system')
+const ready = require('./system')
 
 let mainWindow = null
 
@@ -37,6 +37,7 @@ function initialize() {
 
   app.on('window-all-closed', () => {
     // the user closed the welcome window and is ready to go!
+    app.dock.hide()
   });
 
   app.on('window-all-closed', () => {

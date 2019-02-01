@@ -4,13 +4,13 @@
 
 ```
 # Step 1. 
-electron-packager . --overwrite --platform=darwin --arch=x64 --out=out --icon=assets/app-icon/mac/app.icns --osx-sign.identity='Developer ID Application: Kevaid Inc. (E34JX9GA2A)'
+electron-packager . --overwrite --platform=darwin --arch=x64 --out=out --icon=assets/app-icon/mac/app.icns
 
 # Step 2.
 codesign --deep --force --verbose --sign "Developer ID Application: Kevaid Inc. (E34JX9GA2A)" out/Screen\ Shit-darwin-x64/Screen\ Shit.app 
 
 # Step 3.
-electron-installer-dmg out/ Screen\ Shit --icon=assets/app-icon/png/64x64.png --out=out
+electron-installer-dmg out/ Screen\ Shit --icon=assets/app-icon/png/64x64.png  --overwrite
 ```
 
 ## Sign it
