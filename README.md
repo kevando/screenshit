@@ -43,4 +43,4 @@ I also wanted to bring back some classic UI parts from early internet. Sunglasse
 ![Logo](./assets/app-icon/png/64x64.png)
 ![Logo](./assets/app-icon/png/128x128.png)
 
-[Download the latest version]: https://github.com/kevando/screenshit/releases/download/v1.1/screenshit.dmg
+[Download the latest version]: https://github.com/kevando/screenshit/releases/download/v1.4/Shit.dmg
